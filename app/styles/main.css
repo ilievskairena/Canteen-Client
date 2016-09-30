@@ -1,0 +1,169 @@
+.browsehappy {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+body {
+  padding: 0;
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.marketing,
+.footer {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Custom page header */
+.header {
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 10px;
+}
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 40px;
+  padding-bottom: 19px;
+}
+
+/* Custom page footer */
+.footer {
+  padding-top: 19px;
+  color: #777;
+  border-top: 1px solid #e5e5e5;
+}
+
+.container-narrow > hr {
+  margin: 30px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+  text-align: center;
+  border-bottom: 1px solid #e5e5e5;
+}
+.jumbotron .btn {
+  font-size: 21px;
+  padding: 14px 24px;
+}
+
+/* Supporting marketing content */
+.marketing {
+  margin: 40px 0;
+}
+.marketing p + h4 {
+  margin-top: 28px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+  .container {
+    max-width: 730px;
+  }
+
+  /* Remove the padding we set earlier */
+  .header,
+  .marketing,
+  .footer {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  /* Space out the masthead */
+  .header {
+    margin-bottom: 30px;
+  }
+  /* Remove the bottom border on the jumbotron for visual effect */
+  .jumbotron {
+    border-bottom: 0;
+  }
+
+  /*CSS for clientView  */
+  .inlineNumbers {
+    display: inline-block;
+  } 
+  .inlineNumbers1>span{
+    color: lightblue;
+  }
+  .inlineNumbers2>span{
+    color: lightpink;
+  }
+  .inlineNumbers3>span{
+    color: lightyellow;
+  }
+  .inlineNumbers4>span{
+    color: lightblue;
+  }
+  .inlineNumbers5>span{
+    color: #dff0d8;
+  }
+
+  #selectionPanel{
+      margin-top: 4%;
+  }
+
+  .meal{
+    border:1px solid gray;
+    border-radius:2px;
+    margin:5px;
+    padding:5px
+  }
+  #loggedInUser{
+    display: inline-block;
+  }
+  .vishidden{
+    visibility: hidden;
+  }
+  div>input[type='number']{
+    width:5rem;
+    height:5rem!important;
+    font-size:30px;
+  }
+
+  .selectedShift{
+    border: 1px solid #cdcdcd !important;
+    border-radius: 50%;
+    box-shadow: -3px 3px 35px #ddd;
+  }
+
+  .selectedMealOdd{
+    background-color: #d9edf7;
+    color: #31708f;
+  }
+
+  .selectedMealEven{
+    background-color: #337ab7;
+    color: white;
+  }
+
+  div.inlineNumbers1:active,
+  div.inlineNumbers1:hover,
+  div.inlineNumbers1:focus {
+    outline:  0px !important;
+  }
+
+  div#selectionPanel > div{
+    box-shadow: 0px 2px 25px #cdcdcd;
+  }
+  div#selectionPanel div[class~="panel"]{
+    margin-bottom: 0px;
+  }
+  .log-off-button{
+    margin: 1%;
+    font-size:2rem;
+  }
+
+  .save-button{
+    margin: 1%;
+    font-size:2rem;
+    box-shadow: 0px 2px 25px #cdcdcd;
+  }
+
+  div#selectionPanel div > input[type="number"] {
+    text-align: right;
+  }
+
+}
