@@ -166,4 +166,43 @@ body {
     text-align: right;
   }
 
+  /*first page*/
+  .firstPage{
+    background-image: url('../images/pivara.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    width: 100vw;
+    height:100vh;
+    margin-left:-10px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+  }
+
+  .firstPage > h1{
+    color: #eb1507;
+    text-align: center;
+    font-weight: bold;
+    position: relative;
+    font-size: 4.5rem;
+    top: 45%;
+    left: 20%;
+  }
+
+  /* #cardNumber{
+    visibility: hidden;
+  } */
+
+  .peopleListItem{
+    height: 10rem;
+    font-size: 4rem;
+
+  }
+
+  .peopleListItemGuestBadge{
+    font-size: 3rem;
+    color: white;
+    background-color: #337ab7;
+  }
 }

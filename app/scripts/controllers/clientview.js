@@ -69,7 +69,7 @@ angular.module('canteenClientApp')
                         dayMeal = vm.mealsSelected.friday;
                         break;
             }
-            var dayMeal = {
+            var dayMealObj = {
                 UserID: vm.userLoggedInID,
                 DateID: vm.weekMeals[i].DateId,
                 MealPerDayID: dayMeal,
@@ -80,7 +80,7 @@ angular.module('canteenClientApp')
                 IsWorker: false,
                 CreatedBy: vm.userLoggedIn
             };
-            newWeekMeals.push(dayMeal);
+            newWeekMeals.push(dayMealObj);
         }
     	$http({
             method: 'POST',
@@ -161,6 +161,21 @@ angular.module('canteenClientApp')
     		default: break;			
     	}
 	};
+
+    vm.checkUserWeekStatus = function(){
+        $http({
+            method: 'GET',
+            crossDomain: true,
+            url: "http://localhost:59700/api/meals/WeekMealsUser?dateFrom=" + $filter("date")(vm.weekToShow(0), "yyyy-MM-dd HH:mm:ss.sss")+ "&dateTo="+$filter("date")(vm.weekToShow(4), "yyyy-MM-dd HH:mm:ss.sss")
+        }).
+        success(function(data) {
+            console.log(data);
+            vm.weekMeals = data;
+        }).
+        error(function(data, status, headers, config) {
+            console.log("Error getting meals");
+        });
+    };
 
     vm.weekToShow();
     vm.logIn();

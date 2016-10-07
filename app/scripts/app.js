@@ -25,7 +25,7 @@ angular
       .when('/', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl',
-        controllerAs: 'main'
+        controllerAs: 'vm'
       })
       .when('/about', {
         templateUrl: 'views/about.html',
@@ -35,6 +35,11 @@ angular
       .when('/clientView', {
         templateUrl: 'views/clientview.html',
         controller: 'ClientviewCtrl',
+        controllerAs: 'vm'
+      })
+      .when('/canteenView', {
+        templateUrl: 'views/canteenview.html',
+        controller: 'CanteenviewCtrl',
         controllerAs: 'vm'
       })
       .otherwise({
