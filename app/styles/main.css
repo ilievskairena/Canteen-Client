@@ -80,7 +80,7 @@ body {
   .jumbotron {
     border-bottom: 0;
   }
-
+}
   /*CSS for clientView  */
   .inlineNumbers {
     display: inline-block;
@@ -196,7 +196,7 @@ body {
 
   .peopleListItem{
     height: 10rem;
-    font-size: 4rem;
+    font-size: 5rem;
 
   }
 
@@ -205,4 +205,80 @@ body {
     color: white;
     background-color: #337ab7;
   }
+
+  .scrollbarDark
+{
+  background: #F5F5F5;
+  overflow: auto;
+  height: 100vh;
+  margin-top: 10px;
+}
+
+#ordersList::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #b3e5fc;
+}
+
+#ordersList::-webkit-scrollbar
+{
+  width: 10px;
+  background-color: #01579b;
+}
+
+#ordersList::-webkit-scrollbar-thumb
+{
+  background-color: #01579b; 
+  background-image: -webkit-linear-gradient(45deg,
+                                            rgba(255, 255, 255, .2) 25%,
+                        transparent 25%,
+                        transparent 50%,
+                        rgba(255, 255, 255, .2) 50%,
+                        rgba(255, 255, 255, .2) 75%,
+                        transparent 75%,
+                        transparent)
+}
+
+.menu-selected-details{
+  font-size: 3rem;
+  margin-top: 1rem;
+}
+
+.guest-select{
+  font-size: 3rem;
+  margin-top: 1rem;
+}
+.menuSelect{
+  border: 2px solid #bade1e;
+  padding: 1.7rem;
+  color: darkgreen;
+}
+.menuDescriptionSelect{
+  font-size: 2.5rem;
+}
+
+.selectedMenu{
+  background-color: #cde287!important;
+  color: darkgreen!important;
+  border-color: white;
+}
+
+.guestSeq{
+  margin: 1rem;
+}
+
+.divRealized{
+  width: 100%;
+  height: 6rem;
+}
+
+.buttonRealized{
+  width: 70%;
+  height: 100%;
+  margin-left: 15%;
+  margin-top: 10%;
+  font-size: 3rem;
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.26);
+  border: none;
+  outline: none;
 }

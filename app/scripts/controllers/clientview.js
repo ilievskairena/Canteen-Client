@@ -75,7 +75,7 @@ angular.module('canteenClientApp')
                 MealPerDayID: dayMeal,
                 Shift:  vm.shifts[day],
                 Guests: guestList[i],
-                CardNum: "15151111111",
+                CardNum: "77317561284",
                 IsGuest: false,
                 IsWorker: false,
                 CreatedBy: vm.userLoggedIn
@@ -85,7 +85,7 @@ angular.module('canteenClientApp')
     	$http({
             method: 'POST',
             crossDomain: true,
-            url: "http://localhost:59700/api/meals/saveMealsForWeek",
+            url: "http://localhost:59700/api/meals/saveWeekMeals",
             data: newWeekMeals,
             contentType:"text/json"
         }).

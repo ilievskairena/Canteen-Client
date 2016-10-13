@@ -24,8 +24,37 @@ angular.module('canteenClientApp')
 
     	$location.path("/clientView");
     };
-    vm.printit = function(){
-    	document.addEventListener("keyup",function(e){console.log("BROJOT E = " + e.key)}, false);
+
+    vm.addCardListener = function(){
+        document.addEventListener("keyup",function(e){
+            if(e.keyCode != 13){
+                vm.cardNumber.push(e.key);
+                if(vm.cardNumber.length == 11){
+                    vm.checkPersonCard(vm.cardNumber);
+                }
+            }
+        }, false);
     };
-    vm.printit();
+
+    vm.checkPersonCard = function(card){
+        var userCard = vm.makeNumberString(card);
+        $http({
+            method: 'GET',
+            crossDomain: true,
+            url: "http://localhost:59700/api/orders/userOrdersByCard/?cardNumber="+ userCard.toString()
+        }).
+        success(function(data) {
+            //console.log(data);
+            if(data != null ){
+                vm.waitingList.push(data);
+                console.log(data);
+                vm.cardNumber = [];
+                vm.getMealsForDate();
+            }
+        }).
+        error(function(data, status, headers, config) {
+            console.log("Error getting user");
+        });
+    };
+
   });

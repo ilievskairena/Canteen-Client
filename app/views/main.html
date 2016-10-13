@@ -7,7 +7,9 @@ ng-change="vm.LogInUser()"
 autofocus="autofocus"
 onblur="this.focus()" > -->
  <input type="text" id="cardTRY" 
- ng-keydown="vm.entryScanner()"
+ ng-keyup="vm.entryScanner()"
  bindKeydown="true"
+ autofocus="true"
+ onblur="this.focus()" 
   >
 </div>
