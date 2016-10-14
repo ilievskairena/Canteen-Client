@@ -1,1 +1,89 @@
-<p>This is the about view.</p>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4">
+        <button class="btn btn-warning btn-lg log-off-button pull-left">
+          <i class="fa fa-sign-out fa-3x"></i>
+          <span>Одјава</span>
+        </button>
+      </div>
+      <div class="col-md-4">
+        <h3 class="text-center"><em>Ирена Илиевска</em></h3>
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-success btn-lg save-button pull-right">
+          <i class="fa fa-floppy-o fa-3x"></i>
+          <span>Зачувај</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="row">
+  <!-- <div layout="row" layout-align="space-around center"> -->
+  <div class="col-md-20"
+    ng-repeat="date in vm.options">
+    <div class="panel"
+    ng-class="{'panel-primary' : $index % 2 == 0, 'panel-success' : $index % 2 != 0 }">
+      <!-- Title -->
+      <div class="panel-heading">
+        <h1 class="panel-title">
+          <strong>{{date.Date | dayoftheweek}}</strong>
+          <small><em>{{date.Date | shortdate}}</em></small>
+        </h1>
+      </div>
+      <!-- Body -->
+      <div class="panel-body">
+        <div class="row shift">
+          <div class="col-md-4">
+            <h4 class="page-heading">СМЕНА</h4>
+          </div>
+          <div class="col-md-4">
+            <a class="btn btn-shift"
+             ng-click="date.shift = 1;"
+             ng-class="{'btn-success': (date.shift == 1 && $index % 2 != 0), 'btn-primary' : (date.shift == 1 && $index % 2 == 0), 'btn-default': date.shift != 1}">
+              <span>I</span>
+            </a>
+          </div>
+          <div class="col-md-4">
+            <a class="btn btn-default btn-shift"
+             ng-click="date.shift = 2;"
+             ng-class="{'btn-success': (date.shift == 2 && $index % 2 != 0), 'btn-primary' : (date.shift == 2 && $index % 2 == 0), 'btn-default': date.shift != 2}">
+              <span>II</span>
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="list-group">
+            <a class="list-group-item"
+            ng-class="{'active' : (date.selectedMeal == meal.MealID &&  $parent.$parent.$index % 2 == 0), 'active-success' :  (date.selectedMeal == meal.MealID &&  $parent.$parent.$index % 2 != 0)}"
+            ng-if="date.shift == meal.Shift"
+            ng-click="date.selectedMeal = meal.MealID"
+            ng-repeat="meal in date.Meals">
+              <h4 class="list-group-item-heading">{{meal.Type}}</h4>
+              <p class="list-group-item-text"><em>{{meal.MealDescription}}</em></p>
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <h4 class="page-heading">ГОСТИ</h4>
+          </div>
+          <div class="col-md-8">
+            <a class="btn btn-default btn-shift"
+             ng-click="date.shift = 2;"
+             ng-class="{'btn-success': (date.shift == 2 && $index % 2 != 0), 'btn-primary' : (date.shift == 2 && $index % 2 == 0), 'btn-default': date.shift != 2}">
+              <span>-</span>
+            </a>
+            <input type="number" class="form-control"/>
+            <a class="btn btn-default btn-shift"
+             ng-click="date.shift = 2;"
+             ng-class="{'btn-success': (date.shift == 2 && $index % 2 != 0), 'btn-primary' : (date.shift == 2 && $index % 2 == 0), 'btn-default': date.shift != 2}">
+              <span>+ </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

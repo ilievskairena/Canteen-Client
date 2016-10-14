@@ -30,7 +30,7 @@ angular
       .when('/about', {
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl',
-        controllerAs: 'about'
+        controllerAs: 'vm'
       })
       .when('/clientView', {
         templateUrl: 'views/clientview.html',
