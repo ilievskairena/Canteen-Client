@@ -20,10 +20,9 @@ angular.module('canteenClientApp')
     	document.addEventListener("keyup",function(e){
 		 	if(e.keyCode != 13){
 		 		vm.cardNumber.push(e.key);
-			 	if(vm.cardNumber.length == 12){
-			 		vm.checkPersonCard(vm.cardNumber);
-				}
 		  	}
+            else
+                vm.checkPersonCard(vm.cardNumber);
     	}, false);
     };
 
@@ -35,7 +34,7 @@ angular.module('canteenClientApp')
     	return str;
     };
 
-    var _checkIfInWaiting = function(array,obj){
+    var _checkIfWaiting = function(array,obj){
         for (var i = 0; i < array.length; i++) {
             if (array[i].UserID === obj.UserID) {
                 return true;
@@ -52,7 +51,7 @@ angular.module('canteenClientApp')
         }).
         success(function(data) {
             console.log(data);
-            var inList = _checkIfInWaiting(vm.waitingList,data);
+            var inList = _checkIfWaiting(vm.waitingList,data);
             if(data != null && data.isRealized != true && inList != true){
 		 		vm.waitingList.push(data);
 		 		vm.cardNumber = [];
@@ -60,16 +59,20 @@ angular.module('canteenClientApp')
 		 	}
             else if(data == null){
                 console.log("Data null");
+                vm.cardNumber = [];
             }
-            else if(data.IsRealized == true){
+            else if(data.IsRealized == true || data.OrderID!=null){
                 console.log("User realized the meal for today");
+                vm.cardNumber = [];
             }
             else if(inList == true){
                 console.log("User waiting in line");
+                vm.cardNumber = [];
             }
         }).
         error(function(data, status, headers, config) {
             console.log("Error getting user");
+            vm.cardNumber = [];
         });
     };
 
@@ -120,7 +123,9 @@ angular.module('canteenClientApp')
         }).
         success(function(data) {
             console.log("Success realizing meal");
-            vm.waitingList.shift();
+            var removed = vm.waitingList.splice(vm.removeIndex,1);
+            vm.employeeToServe=vm.waitingList[0];
+            vm.guestSelection = [];
         }).
         error(function(data, status, headers, config) {
             console.log("Error realizing meal");
