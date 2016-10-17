@@ -19,6 +19,10 @@ angular
     'ngSanitize',
     'ngTouch',
     'ngMaterial',
+    'ngProgress',
+    'ngDialog',
+    'LocalStorageModule',
+    'toastr',
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -27,12 +31,7 @@ angular
         controller: 'MainCtrl',
         controllerAs: 'vm'
       })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl',
-        controllerAs: 'vm'
-      })
-      .when('/clientView', {
+      .when('/orders', {
         templateUrl: 'views/clientview.html',
         controller: 'ClientviewCtrl',
         controllerAs: 'vm'
@@ -45,4 +44,7 @@ angular
       .otherwise({
         redirectTo: '/'
       });
+  })
+  .config(function($httpProvider) {
+      $httpProvider.interceptors.push('authInterceptorService');
   });

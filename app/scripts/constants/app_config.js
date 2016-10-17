@@ -11,6 +11,8 @@ angular.module('canteenClientApp').constant('APP_CONFIG', {
 	BASE_URL: "http://localhost:59700",
  	token: "/token",
  	config: "/api/config",
+ 	client_orders: "/api/client/orders",
+ 	client_orders_save: "/api/client/save",
  	dates:"/api/dates",
  	dates_by_year: "/api/dates/GetDates",
  	dates_range: "/api/dates/range",
@@ -28,5 +30,6 @@ angular.module('canteenClientApp').constant('APP_CONFIG', {
  	menu: "/api/meals/menu",
  	orders: "/api/orders",
  	orders_delete: "/api/orders/delete/",
- 	orders_thidshift: "/api/orders/thirdshift"
+ 	orders_thidshift: "/api/orders/thirdshift",
+ 	orders_by_cards : "/api/orders/userOrdersByCard"
 });
