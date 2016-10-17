@@ -8,40 +8,85 @@
  * Controller of the canteenClientApp
  */
 angular.module('canteenClientApp')
-  .controller('MainCtrl', function ($location, $timeout) {
-    
+  .controller('MainCtrl', function ($scope, $http, $rootScope, localStorageService, $location, $timeout, APP_CONFIG, AuthenticationService, toastr, ngProgressFactory) {
     var vm = this;
-    var inputChangedPromise;
+    //Incharge for the card field to be focused
+    vm.inputFocus = true;
+    vm.cardNumber = "";
+    vm.progressBar = ngProgressFactory.createInstance();
+    
+    AuthenticationService.logOut();
 
-    vm.LogInUser = function(){
-    	if(inputChangedPromise){
-	        $timeout.cancel(inputChangedPromise);
-	    }
-	    inputChangedPromise = $timeout(vm.redirect(),1000);
+    vm.focus = function() {
+        $timeout(function() {
+            vm.inputFocus = false;
+            vm.inputFocus = true;
+        }, 10);
     };
+
+    vm.entryScanner = function(e) {
+        if(e.keyCode == 13){
+            vm.login();
+        }
+    };
+
+    vm.login = function(){
+    	vm.progressBar.setColor('#8dc63f');
+        vm.progressBar.start();
+        vm.user = {
+            username: vm.cardNumber,
+            password: "9899c72b436acac0b0670403dde686e8"
+        }
+        AuthenticationService.login(vm.user).then(
+        function(response)
+        {
+            vm.profileProperties();
+        },
+        function(error) {
+            vm.progressBar.setColor('red');
+            vm.progressBar.reset();
+            vm.cardNumber = "";
+            toastr.error("Грешка!","Вашата картичка не е регистрирана во системот");
+        });
+    };
+
+    vm.profileProperties = function() {
+        $http({
+          method: 'GET',
+          crossDomain: true,
+          url:  APP_CONFIG.BASE_URL + APP_CONFIG.user_properties
+        }).
+        success(function(data) {
+            console.log(data);
+            localStorageService.set('user', data);
+            vm.progressBar.complete();
+            $rootScope.isLogin = false;
+            $rootScope.userName = data.Name;
+            $rootScope.roleName = data.RoleName;
+            $rootScope.roleId = data.RoleID;
+            if($rootScope.roleId == 4)
+                $location.path('/canteenView');
+            else $location.path('/orders')
+        }).
+        error(function(data, status, headers, config) {
+            vm.progressBar.setColor('red');
+            vm.progressBar.reset();
+            AuthenticationService.logOut();
+            toastr.error("Грешка при најава, ве молиме обидете се повторно!");
+        });
+    }; 
 
     vm.redirect = function() {
-
-    	$location.path("/clientView");
+    	$location.path("/orders");
     };
 
-    vm.addCardListener = function(){
-        document.addEventListener("keyup",function(e){
-            if(e.keyCode != 13){
-                vm.cardNumber.push(e.key);
-                if(vm.cardNumber.length == 11){
-                    vm.checkPersonCard(vm.cardNumber);
-                }
-            }
-        }, false);
-    };
 
     vm.checkPersonCard = function(card){
         var userCard = vm.makeNumberString(card);
         $http({
             method: 'GET',
             crossDomain: true,
-            url: "http://localhost:59700/api/orders/userOrdersByCard/?cardNumber="+ userCard.toString()
+            url: APP_CONFIG.BASE_URL + "/api/orders/userOrdersByCard/?cardNumber="+ userCard.toString()
         }).
         success(function(data) {
             //console.log(data);

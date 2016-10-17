@@ -8,176 +8,174 @@
  * Controller of the canteenClientApp
  */
 angular.module('canteenClientApp')
-  .controller('ClientviewCtrl', function ($scope,$http,$filter) {
-   
+  .controller('ClientviewCtrl', function ($scope, $timeout, $location, $route, APP_CONFIG, $rootScope, ngDialog, $http, $filter, utility, AuthenticationService, localStorageService) {
     var vm = this;
-    vm.open = 'true';
-    //selected shift per day
-    vm.shifts = [];
-    //selected meal per day
-    vm.mealsSelected = {
-    	monday:"",
-    	thuesday:"",
-    	wednesday:"",
-    	thursday:"",
-    	friday:"",
+    vm.loggedInUser = localStorageService.get('user');
 
-    };
-    vm.monGuest = 0;
-    vm.thuGuest = 0;
-    vm.wedGuest = 0;
-    vm.thrGuest = 0;
-    vm.friGuest = 0;
+    vm.options = [];
+    vm.model = [];
 
-    vm.shifts['monday'] = vm.shifts['thuesday'] = vm.shifts['wednesday'] = vm.shifts['thursday'] = vm.shifts['friday'] =0;
-    vm.clickOpen = function(day,shift){
-    	vm.shifts[day] = shift;
-    	console.log(vm.shifts[day] + " = " + day);
-        console.log(vm.shifts);
+    vm.flags = {
+      showOtherDays: false
     };
 
-    vm.logIn = function(){
-    	//send card number to log in user
-    	vm.userLoggedIn="ИРЕНА ИЛИЕВСКА";
-        vm.userLoggedInID=18;
-    };
-    vm.logOut = function(){
-    	//log out user
-    	console.log("LOGOUT");
+    vm.items = {
+      startIndex: 0,
+      endIndex: 5
     };
 
-    vm.saveChoice = function(){
-        var guestList = [vm.monGuest,vm.thuGuest,vm.wedGuest,vm.thrGuest,vm.friGuest];
-        var newWeekMeals =[];
-        for(var i = 0; i < 5; i++){
-            var day ="";
-            var dayMeal = null;
-            switch(i){
-                case 0: day = "monday";
-                        dayMeal = vm.mealsSelected.monday;
-                        break;
-                case 1: day = "thuesday";
-                        dayMeal = vm.mealsSelected.thuesday;
-                        break;
-                case 2: day = "wednesday";
-                        dayMeal = vm.mealsSelected.wednesday;
-                        break;
-                case 3: day = "thursday";
-                        dayMeal = vm.mealsSelected.thursday;
-                        break;
-                case 4: day = "friday";
-                        dayMeal = vm.mealsSelected.friday;
-                        break;
-            }
-            var dayMealObj = {
-                UserID: vm.userLoggedInID,
-                DateID: vm.weekMeals[i].DateId,
-                MealPerDayID: dayMeal,
-                Shift:  vm.shifts[day],
-                Guests: guestList[i],
-                CardNum: "77317561284",
-                IsGuest: false,
-                IsWorker: false,
-                CreatedBy: vm.userLoggedIn
-            };
-            newWeekMeals.push(dayMealObj);
+    vm.logout = function() {
+      AuthenticationService.logOut();
+    };
+        
+    vm.nextWeek = function() {
+        if(vm.flags.showOtherDays) {
+            vm.items.startIndex += 5;
+            vm.items.endIndex +=5;
         }
-    	$http({
-            method: 'POST',
-            crossDomain: true,
-            url: "http://localhost:59700/api/meals/saveWeekMeals",
-            data: newWeekMeals,
-            contentType:"text/json"
-        }).
-        success(function(data) {
-            console.log('Success saving meals for user');
-        }).
-        error(function(data, status, headers, config) {
-            console.log("Error saving meals for user");
+    };
+
+    vm.validateButton = function() {
+        var result = true;
+        for(var i = vm.items.startIndex; (i < vm.items.endIndex) && (i < vm.options.length); i++) {
+            var date = vm.options[i];
+            if(date.OrderID == null) {
+                if(date.selectedMeal == null) {
+                    result = false;
+                    break;
+                }
+            }
+        }
+        vm.flags.showOtherDays = (vm.items.endIndex < vm.options.length);
+        return result;
+    };
+
+    vm.isAlreadyOrdered = function() {
+        for(var i = 0; i < vm.options.length; i++) {
+            var date = vm.options[i];
+            if(date.OrderID == null) return false;
+        }
+        return true;
+    };
+
+    vm.removeGuest = function(date) {
+      if(date.Guests == 0) return;
+      date.Guests--;
+    };
+
+    vm.addGuest = function(date) {
+      if(date.OrderID != null) return;
+      date.Guests++;
+    };
+
+    vm.selectShift = function(date, shift) {
+      if(date.ChosenShift != null) return;
+      date.shift = shift;
+      date.selectedMeal = null;
+    };
+
+    vm.selectMeal = function(date, meal) {
+      if(date.MealPerDateID != null) return;
+      date.selectedMeal = meal.MealID
+    };
+
+    vm.formatData = function() {
+      var result = [];
+      for(var i in vm.options) {
+        var date = vm.options[i];
+        result.push({
+          DateID: date.DateID,
+          Date: date.Date,
+          MealPerDayID: date.MealPerDateID,
+          MealID : date.selectedMeal,
+          Guests: date.guests,
+          ChosenShift : date.ChosenShift == null ? date.shift : date.ChosenShift,
+          MealChoices : []
         });
+      }
+      console.log(result);
+      return result;
+    };
+
+    vm.formatPreviewData = function() {
+        var result = [];
+        for(var i in vm.options) {
+            var date = vm.options[i];
+            for(var j in date.MealChoices) {
+                var meal = date.MealChoices[j];
+                if(meal.MealID == date.selectedMeal) {
+                    result.push({
+                        date : date.Date,
+                        meal : meal.MealDescription,
+                        type : meal.Type,
+                        shift : meal.shift
+                    });
+                    break;
+                }
+            }
+        }
+        return result;
+    };
+
+    vm.getOrderPlan = function() {
+      var tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0,0,0,0);
+      var nextWeek = utility.getNextWeekStart();
+      nextWeek.setHours(0,0,0,0);
+      var dateTo = new Date(nextWeek);
+      dateTo.setDate(dateTo.getDate() + 4);
+      tomorrow = $filter('date')(tomorrow, "yyyy-MM-dd HH:mm:ss.sss");
+      dateTo = $filter('date')(dateTo, "yyyy-MM-dd HH:mm:ss.sss");
+
+      utility.getOrdersByDateRage(tomorrow, dateTo).then(
+      function(result) {
+        vm.options = result.data;
+        vm.flags.showOtherDays = result.data.length >= 5;
+      }, 
+      function(error) {
+
+      });
+    };
+
+    vm.insert = function() {
+      var data = vm.formatData();
+      $http({
+          method: 'POST',
+          contentType:'application/json',
+          crossDomain: true,
+          url:  APP_CONFIG.BASE_URL + APP_CONFIG.client_orders_save,
+          data: data
+      }).
+      success(function(data) {
+        toastr.success("Нарачата е успешно извршена!");
+        $timeout(function() {
+            AuthenticationService.logOut();
+        }, 1000);
+      }).
+      error(function(data, status, headers, config) {
+          console.log("Error adding cost center");
+      });
+    };
+
+    vm.confirm = function() {
+        var data = vm.formatPreviewData();
+        var confirmDialog = ngDialog.openConfirm({
+            template: "../../views/partials/confirmOrder.html",
+            scope: $scope,
+            data: data
+        });
+
+        // NOTE: return the promise from openConfirm
+        return confirmDialog;  
+    };
+
+    vm.reload = function() {
+         $route.reload();
+    };
+
+    if(vm.loggedInUser == null || vm.loggedInUser == undefined) {
+        $location.path('/');
     }
-
-    vm.Guests = function(day, opp){
-    	switch(day){
-    		case 'monday': if(opp == 0) vm.monGuest++;
-    						else vm.monGuest--;
-    						if(vm.monGuest < 0) vm.monGuest = 0;// value can not be less than 0
-    						break;
-    		case 'thuesday': if(opp == 0) vm.thuGuest++;
-    						else vm.thuGuest--;
-    						if(vm.thuGuest < 0) vm.thuGuest = 0;// value can not be less than 0
-    						break;
-    		case 'wednesday': if(opp == 0) vm.wedGuest++;
-    						else vm.wedGuest--;
-    						if(vm.wedGuest < 0) vm.wedGuest = 0;// value can not be less than 0
-    						break;
-    		case 'thursday': if(opp == 0) vm.thrGuest++;
-    						else vm.thrGuest--;
-    						if(vm.thrGuest < 0) vm.thrGuest = 0;// value can not be less than 0
-    						break;
-    		case 'friday': if(opp == 0) vm.friGuest++;
-    						else vm.friGuest--;
-    						if(vm.friGuest < 0) vm.friGuest = 0;// value can not be less than 0
-    						break;	
-    		default: break;			
-    	}
-    };
-
-    vm.weekToShow = function(num){
-    	var today = new Date();
-    	today.setHours(0,0,0,0);
-    	if(today.getDay()!=1)
-    		return today.previous().monday().addDays(num);
-	    return today.addDays(num);
-    };
-
-    vm.getMealsForWeek = function(){
-		$http({
-            method: 'GET',
-            crossDomain: true,
-            url: "http://localhost:59700/api/meals/MealByDate?dateFrom=" + $filter("date")(vm.weekToShow(0), "yyyy-MM-dd HH:mm:ss.sss")+ "&dateTo="+$filter("date")(vm.weekToShow(4), "yyyy-MM-dd HH:mm:ss.sss")
-        }).
-        success(function(data) {
-            console.log(data);
-            vm.weekMeals = data;
-        }).
-        error(function(data, status, headers, config) {
-            console.log("Error getting meals");
-        });
-	};
-
-	vm.mealSelect = function(meal,day){
-		switch(day){
-    		case 'monday': vm.mealsSelected.monday = meal.MealID;
-    						break;
-    		case 'thuesday': vm.mealsSelected.thuesday = meal.MealID;
-    						break;
-    		case 'wednesday': vm.mealsSelected.wednesday = meal.MealID;
-    						break;
-    		case 'thursday': vm.mealsSelected.thursday = meal.MealID;
-    						break;
-    		case 'friday':  vm.mealsSelected.friday = meal.MealID;
-    						break;
-    		default: break;			
-    	}
-	};
-
-    vm.checkUserWeekStatus = function(){
-        $http({
-            method: 'GET',
-            crossDomain: true,
-            url: "http://localhost:59700/api/meals/WeekMealsUser?dateFrom=" + $filter("date")(vm.weekToShow(0), "yyyy-MM-dd HH:mm:ss.sss")+ "&dateTo="+$filter("date")(vm.weekToShow(4), "yyyy-MM-dd HH:mm:ss.sss")
-        }).
-        success(function(data) {
-            console.log(data);
-            vm.weekMeals = data;
-        }).
-        error(function(data, status, headers, config) {
-            console.log("Error getting meals");
-        });
-    };
-
-    vm.weekToShow();
-    vm.logIn();
-    vm.getMealsForWeek();
-  });
+    else vm.getOrderPlan();
+});
