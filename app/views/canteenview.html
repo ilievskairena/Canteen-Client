@@ -1,7 +1,7 @@
 <div class="row" ng-keyup="vm.checkPersonCard()" ng-focus="true">
 	<div class="col-md-4 scrollbarDark" id="ordersList">
 		<div class="list-group">
-			<a ng-repeat="employee in vm.waitingList" ng-init="vm.employeeToServe=vm.waitingList[0]" ng-click="vm.employeeToServe=employee;vm.removeIndex=$index" class="list-group-item peopleListItem" ng-class="{active:vm.employeeToServe == vm.waitingList[$index]}">
+			<a ng-repeat="employee in vm.waitingList" ng-init="vm.employeeToServe=vm.waitingList[0]" ng-click="vm.employeeToServe=employee;vm.removeIndex=$index;vm.employeeToServe.MealID=null;vm.MealSelectedForUser = null" class="list-group-item peopleListItem" ng-class="{active:vm.employeeToServe == vm.waitingList[$index]}">
 			<span class="glyphicon glyphicon-user"></span>
 		   {{employee.Name}} <span ng-if="employee.Guests.length!=0" class="badge peopleListItemGuestBadge">{{employee.Guests.length}}</span>
 		 	</a>

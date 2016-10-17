@@ -18,11 +18,14 @@ angular.module('canteenClientApp')
 
 	vm.addCardListener = function(){
     	document.addEventListener("keyup",function(e){
+            if(e.key=="Enter")
+                console.log(e);
 		 	if(e.keyCode != 13){
 		 		vm.cardNumber.push(e.key);
 		  	}
-            else
+            else if(e.keyCode==13){
                 vm.checkPersonCard(vm.cardNumber);
+            }
     	}, false);
     };
 
@@ -59,7 +62,6 @@ angular.module('canteenClientApp')
 		 	}
             else if(data == null){
                 console.log("Data null");
-                vm.cardNumber = [];
             }
             else if(data.IsRealized == true || data.OrderID!=null){
                 console.log("User realized the meal for today");
