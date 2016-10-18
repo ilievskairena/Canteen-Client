@@ -15,6 +15,28 @@ angular.module('canteenClientApp').service('utility', function (APP_CONFIG, $htt
         });
     };
 
+    this.getOrdersByDateRage = function(dateFrom, dateTo) {
+        return $http.get(APP_CONFIG.BASE_URL + APP_CONFIG.client_orders + "?dateFrom=" + dateFrom + "&dateTo=" + dateTo).
+        then(function(result) {
+            return result;
+        });
+    };
+
+    this.getThisWeekEnd = function(date) {
+        var day = date.getDay();
+        //0 - Sunday
+        //1- Monday
+        //...6 - Saturday
+        var end = new Date(date);
+        if(day == 5) {
+            return date;
+        }
+        else {
+            end.setDate(end.getDate() + (5 - day));
+        }
+        return end;
+    };
+
     this.getNextWeekStart = function() {
     	var today = new Date();
     	var day = today.getDay();

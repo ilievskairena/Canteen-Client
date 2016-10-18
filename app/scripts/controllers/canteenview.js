@@ -8,18 +8,18 @@
  * Controller of the canteenClientApp
  */
 angular.module('canteenClientApp')
-  .controller('CanteenviewCtrl', function ($http,$filter) {
+  .controller('CanteenviewCtrl', function ($http, $filter, $location, APP_CONFIG, AuthenticationService, localStorageService, ngProgressFactory, toastr) {
     var vm = this;
 
+    vm.loggedInUser = localStorageService.get('user');
 	vm.cardNumber= [];
     vm.guestSelection = [];
 	vm.waitingList = [];
     vm.mealsForDay = [];
+    vm.progressBar = ngProgressFactory.createInstance();
 
 	vm.addCardListener = function(){
     	document.addEventListener("keyup",function(e){
-            if(e.key=="Enter")
-                console.log(e);
 		 	if(e.keyCode != 13){
 		 		vm.cardNumber.push(e.key);
 		  	}
@@ -44,13 +44,14 @@ angular.module('canteenClientApp')
             }
         }
         return false;
-    }
+    };
+
     vm.checkPersonCard = function(card){
     	var userCard = vm.makeNumberString(card);
     	$http({
             method: 'GET',
             crossDomain: true,
-            url: "http://localhost:59700/api/orders/userOrdersByCard/?cardNumber="+ userCard.toString()
+            url: APP_CONFIG.BASE_URL + APP_CONFIG.orders_by_cards + APP_CONFIG.orders_by_cards + "?cardNumber="+ userCard.toString()
         }).
         success(function(data) {
             console.log(data);
@@ -80,16 +81,17 @@ angular.module('canteenClientApp')
 
     vm.getMealsForDate = function(){
     	var today = new Date();
+        var date = $filter("date")(today, "yyyy-MM-dd 00:00:00.000");
 		$http({
             method: 'GET',
             crossDomain: true,
-            url: "http://localhost:59700/api/meals/MealByDate?dateFrom=" + $filter("date")(today, "yyyy-MM-dd 00:00:00.000")+ "&dateTo="+$filter("date")(today, "yyyy-MM-dd HH:mm:ss.sss")
+            url: APP_CONFIG.BASE_URL + APP_CONFIG.meals_by_date + "?dateFrom=" + date + "&dateTo="+ date
         }).
         success(function(data) {
             vm.getMealsForShift(data[0].Meals);
         }).
         error(function(data, status, headers, config) {
-            console.log("Error getting meals");
+            toastr.error("Грешка при вчитување на оброк!");
         });
 	};
 
@@ -107,6 +109,8 @@ angular.module('canteenClientApp')
     };
 
     vm.MealRealized = function(vm){
+        vm.progressBar.setColor('#8dc63f');
+        vm.progressBar.start();
         var realizedMeal = {
             UserID : vm.employeeToServe.UserID,
             Name : vm.employeeToServe.Name,
@@ -120,19 +124,25 @@ angular.module('canteenClientApp')
         $http({
             method: 'PUT',
             crossDomain: true,
-            url: "http://localhost:59700/api/orders/mealRealized",
+            url: APP_CONFIG.BASE_URL + APP_CONFIG.orders_realize,
             data: realizedMeal
         }).
         success(function(data) {
-            console.log("Success realizing meal");
+            vm.progressBar.complete();
+            toastr.info("Нарачата е успешно реализирана!");
             var removed = vm.waitingList.splice(vm.removeIndex,1);
             vm.employeeToServe=vm.waitingList[0];
             vm.guestSelection = [];
         }).
         error(function(data, status, headers, config) {
-            console.log("Error realizing meal");
+          toastr.error("Реализацијата не е зачувана. Ве молиме обидете се повторно!");
+          vm.progressBar.setColor('red');
+          vm.progressBar.reset();
         });
     };
 
-    vm.addCardListener();
+    if(vm.loggedInUser == null || vm.loggedInUser == undefined) {
+        $location.path('/');
+    }
+    else vm.addCardListener();
   });

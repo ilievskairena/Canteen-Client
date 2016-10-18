@@ -33,6 +33,10 @@ module.exports = function(config) {
       'bower_components/angular-touch/angular-touch.js',
       'bower_components/angular-material/angular-material.js',
       'bower_components/DateJS/build/production/date.min.js',
+      'bower_components/angular-toastr/dist/angular-toastr.tpls.js',
+      'bower_components/ngprogress/build/ngprogress.min.js',
+      'bower_components/angular-local-storage/dist/angular-local-storage.js',
+      'bower_components/ng-dialog/js/ngDialog.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

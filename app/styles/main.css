@@ -7,6 +7,7 @@
 
 body {
   padding: 0;
+  overflow: hidden;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -81,26 +82,7 @@ body {
     border-bottom: 0;
   }
 }
-  /*CSS for clientView  */
-  .inlineNumbers {
-    display: inline-block;
-  } 
-  .inlineNumbers1>span{
-    color: lightblue;
-  }
-  .inlineNumbers2>span{
-    color: lightpink;
-  }
-  .inlineNumbers3>span{
-    color: lightyellow;
-  }
-  .inlineNumbers4>span{
-    color: lightblue;
-  }
-  .inlineNumbers5>span{
-    color: #dff0d8;
-  }
-
+ 
   #selectionPanel{
       margin-top: 4%;
   }
@@ -166,29 +148,63 @@ body {
     text-align: right;
   }
 
-  /*first page*/
-  .firstPage{
-    background-image: url('../images/pivara.jpg');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 100%;
-    width: 100vw;
-    height:100vh;
-    margin-left:-10px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-  }
+/* .animate-repeat {
+  line-height:30px;
+  list-style:none;
+  box-sizing:border-box;
+}
 
-  .firstPage > h1{
-    color: #eb1507;
-    text-align: center;
-    font-weight: bold;
-    position: relative;
-    font-size: 4.5rem;
-    top: 45%;
-    left: 20%;
-  }
+.animate-repeat.ng-move,
+.animate-repeat.ng-enter,
+.animate-repeat.ng-leave {
+  transition:all linear 0.3s;
+}
+
+.animate-repeat.ng-leave.ng-leave-active,
+.animate-repeat.ng-move,
+.animate-repeat.ng-enter {
+  opacity:0;
+  max-height:0;
+}
+
+.animate-repeat.ng-leave,
+.animate-repeat.ng-move.ng-move-active,
+.animate-repeat.ng-enter.ng-enter-active {
+  opacity:1;
+  max-height: 10%;
+} */
+
+/*first page*/
+.firstPage{/* 
+  background-image: url('../images/logo.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover; */
+  width: 100%;
+  height:100%;
+  margin-left:-10px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: 99;
+}
+
+.firstPage > img {
+  width: 350px;
+  top: 15%;
+  left: 40%;
+  position: absolute;
+}
+
+.firstPage > h1{
+  color: #eb1507;
+  text-align: center;
+  font-weight: bold;
+  position: relative;
+  font-size: 4.5rem;
+  top: 75%;
+}
 
   /* #cardNumber{
     visibility: hidden;
@@ -315,6 +331,13 @@ a.list-group-item.active-success > h4 {
   font-weight: bold;
 }
 
+.control-guest {
+  display: inline-block;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin: 0px;
+}
+
 .col-md-20 {
   position: relative;
   min-height: 1px;
@@ -329,6 +352,63 @@ a.list-group-item.active-success > h4 {
   }
 }
 
+.btn-text-minus {
+  position: absolute;
+  left: 25px;
+  top: -3px;
+}
+
+.btn-text-plus {
+  position: absolute;
+  left: 22px;
+  top: -2px;
+}
+
+.btn-text-first {
+  position: absolute;
+  left: 27px;
+  top: -1px;
+}
+
+.btn-text-second {
+  position: absolute;
+  left: 24px;
+  top: -1px;
+}
+
+.meal-headings {
+  padding-top: 10px;
+}
+
+.card-input {
+  z-index: -43;
+  background: transparent;
+  color: transparent;
+  border: none;
+  box-shadow: none !important;
+  opacity: 0;
+}
+.card-input:focus {
+  z-index: -43;
+  background: transparent;
+  color: transparent;
+  border: none;
+  box-shadow: none !important;
+}
+
+.list-item-date {
+  font-size: 1.5em;
+}
+
+.no-animate {
+   -webkit-transition: none !important;
+   transition: none !important;
+}
+
+.ngdialog.ngdialog-theme-default .ngdialog-content {
+  padding: 0px !important;
+  width: 30%;
+}
 .panel-beige {
   border-color: #d6e9c6;
 }

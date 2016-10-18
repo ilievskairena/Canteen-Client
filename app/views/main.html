@@ -1,15 +1,13 @@
-<div class="firstPage">
+<div class="firstPage" ng-click="vm.focus();">
+	<img src="../images/logo.png" alt="logo" />
  <h1>Добредојдовте во мензата на ПИВАРА АД</h1>
-<!--  <input type="text" id="cardNumber" 
-ng-model="vm.cardNumber" 
-ng-model-options="{debounce: 750}"
-ng-change="vm.LogInUser()"
-autofocus="autofocus"
-onblur="this.focus()" > -->
  <input type="text" id="cardTRY" 
- ng-keyup="vm.entryScanner()"
+ class="card-input"
+ ng-model="vm.cardNumber"
+ ng-keyup="vm.entryScanner($event)"
  bindKeydown="true"
  autofocus="true"
- onblur="this.focus()" 
-  >
+ focus-me="vm.inputFocus"
+ ng-blur="vm.focus()"
+ />
 </div>
