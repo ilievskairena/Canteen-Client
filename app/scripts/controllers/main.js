@@ -65,7 +65,7 @@ angular.module('canteenClientApp')
             $rootScope.roleName = data.RoleName;
             $rootScope.roleId = data.RoleID;
             if($rootScope.roleId == 4)
-                $location.path('/canteenView');
+                $location.path('/canteen');
             else $location.path('/orders')
         }).
         error(function(data, status, headers, config) {

@@ -8,10 +8,11 @@
  * Controller of the canteenClientApp
  */
 angular.module('canteenClientApp')
-  .controller('ClientviewCtrl', function ($scope, $timeout, toastr, $location, $route, APP_CONFIG, $rootScope, ngDialog, $http, $filter, utility, AuthenticationService, localStorageService) {
+  .controller('ClientviewCtrl', function ($scope, $timeout, toastr, $location, $route, APP_CONFIG, $rootScope, ngDialog, $http, $filter, utility, AuthenticationService, localStorageService, ngProgressFactory) {
     var vm = this;
     vm.loggedInUser = localStorageService.get('user');
 
+    vm.progressBar = ngProgressFactory.createInstance();
     vm.options = [];
     vm.model = [];
 
@@ -140,6 +141,8 @@ angular.module('canteenClientApp')
 
     vm.insert = function() {
       var data = vm.formatData();
+      vm.progressBar.setColor('#8dc63f');
+      vm.progressBar.start();
       $http({
           method: 'POST',
           contentType:'application/json',
@@ -148,13 +151,16 @@ angular.module('canteenClientApp')
           data: data
       }).
       success(function(data) {
+        vm.progressBar.complete();
         toastr.info("Нарачата е успешно извршена!");
         $timeout(function() {
             AuthenticationService.logOut();
         }, 1000);
       }).
       error(function(data, status, headers, config) {
-          console.log("Error adding cost center");
+          toastr.error("Нарачката не е зачувана. Ве молиме обидете се повторно!");
+          vm.progressBar.setColor('red');
+          vm.progressBar.reset();
       });
     };
 

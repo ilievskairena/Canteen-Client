@@ -211,15 +211,16 @@ body {
   } */
 
   .peopleListItem{
-    height: 10rem;
-    font-size: 5rem;
-
+    height: 8rem;
+    font-size: 4.5rem;
+    padding-top: 0px;
   }
 
   .peopleListItemGuestBadge{
     font-size: 3rem;
     color: white;
-    background-color: #337ab7;
+    background-color: #2196f3;
+    margin: 2rem;
   }
 
   .scrollbarDark
@@ -264,11 +265,6 @@ body {
   font-size: 3rem;
   margin-top: 1rem;
 }
-.menuSelect{
-  border: 2px solid #bade1e;
-  padding: 1.7rem;
-  color: darkgreen;
-}
 .menuDescriptionSelect{
   font-size: 2.5rem;
 }
@@ -292,7 +288,8 @@ body {
   width: 70%;
   height: 100%;
   margin-left: 15%;
-  margin-top: 10%;
+  margin-top: 2%;
+  margin-bottom: 2%;
   font-size: 3rem;
   box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.26);
   border: none;
@@ -411,4 +408,22 @@ a.list-group-item.active-success > h4 {
 .ngdialog.ngdialog-theme-default .ngdialog-content {
   padding: 0px !important;
   width: 30%;
+}
+.panel-beige {
+  border-color: #d6e9c6;
+}
+.panel-beige > .panel-heading {
+  color: #ffffff;
+  background-color: #2b7f73;
+  border-color: #d6e9c6;
+}
+.panel-beige > .panel-heading + .panel-collapse > .panel-body {
+  border-top-color: #d6e9c6;
+}
+.panel-beige > .panel-heading .badge {
+  color: #4caf50;
+  background-color: #ffffff;
+}
+.panel-beige > .panel-footer + .panel-collapse > .panel-body {
+  border-bottom-color: #d6e9c6;
 }

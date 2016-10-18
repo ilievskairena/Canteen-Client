@@ -36,7 +36,7 @@ angular
         controller: 'ClientviewCtrl',
         controllerAs: 'vm'
       })
-      .when('/canteenView', {
+      .when('/canteen', {
         templateUrl: 'views/canteenview.html',
         controller: 'CanteenviewCtrl',
         controllerAs: 'vm'
