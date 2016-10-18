@@ -8,7 +8,7 @@
  * Controller of the canteenClientApp
  */
 angular.module('canteenClientApp')
-  .controller('ClientviewCtrl', function ($scope, $timeout, $location, $route, APP_CONFIG, $rootScope, ngDialog, $http, $filter, utility, AuthenticationService, localStorageService) {
+  .controller('ClientviewCtrl', function ($scope, $timeout, toastr, $location, $route, APP_CONFIG, $rootScope, ngDialog, $http, $filter, utility, AuthenticationService, localStorageService) {
     var vm = this;
     vm.loggedInUser = localStorageService.get('user');
 
@@ -59,7 +59,7 @@ angular.module('canteenClientApp')
     };
 
     vm.removeGuest = function(date) {
-      if(date.Guests == 0) return;
+      if(date.Guests == 0 || date.OrderID != null) return;
       date.Guests--;
     };
 
@@ -88,7 +88,7 @@ angular.module('canteenClientApp')
           Date: date.Date,
           MealPerDayID: date.MealPerDateID,
           MealID : date.selectedMeal,
-          Guests: date.guests,
+          Guests: date.Guests,
           ChosenShift : date.ChosenShift == null ? date.shift : date.ChosenShift,
           MealChoices : []
         });
@@ -148,7 +148,7 @@ angular.module('canteenClientApp')
           data: data
       }).
       success(function(data) {
-        toastr.success("Нарачата е успешно извршена!");
+        toastr.info("Нарачата е успешно извршена!");
         $timeout(function() {
             AuthenticationService.logOut();
         }, 1000);
