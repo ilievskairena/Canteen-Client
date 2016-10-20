@@ -51,7 +51,7 @@ angular.module('canteenClientApp')
     	$http({
             method: 'GET',
             crossDomain: true,
-            url: APP_CONFIG.BASE_URL + APP_CONFIG.orders_by_cards + APP_CONFIG.orders_by_cards + "?cardNumber="+ userCard.toString()
+            url: APP_CONFIG.BASE_URL + APP_CONFIG.orders_by_cards + "?cardNumber="+ userCard.toString()
         }).
         success(function(data) {
             console.log(data);
@@ -121,6 +121,7 @@ angular.module('canteenClientApp')
             IsRealized : true,
             Shift : vm.Shift()
         };
+        console.log(realizedMeal);
         $http({
             method: 'PUT',
             crossDomain: true,
@@ -129,7 +130,7 @@ angular.module('canteenClientApp')
         }).
         success(function(data) {
             vm.progressBar.complete();
-            toastr.info("Нарачата е успешно реализирана!");
+            toastr.info("Нарачката е успешно реализирана!");
             var removed = vm.waitingList.splice(vm.removeIndex,1);
             vm.employeeToServe=vm.waitingList[0];
             vm.guestSelection = [];
