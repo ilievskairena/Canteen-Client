@@ -51,7 +51,7 @@ angular.module('canteenClientApp')
     	$http({
             method: 'GET',
             crossDomain: true,
-            url: APP_CONFIG.BASE_URL + APP_CONFIG.orders_by_cards + APP_CONFIG.orders_by_cards + "?cardNumber="+ userCard.toString()
+            url: APP_CONFIG.BASE_URL + APP_CONFIG.orders_by_cards  + "?cardNumber="+ userCard.toString()
         }).
         success(function(data) {
             console.log(data);
