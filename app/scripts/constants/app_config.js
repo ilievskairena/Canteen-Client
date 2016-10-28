@@ -32,5 +32,6 @@ angular.module('canteenClientApp').constant('APP_CONFIG', {
  	orders_delete: "/api/orders/delete/",
  	orders_thidshift: "/api/orders/thirdshift",
  	orders_by_cards : "/api/orders/userOrdersByCard",
- 	orders_realize: "/api/orders/mealRealized"
+ 	orders_realize: "/api/orders/mealRealized",
+ 	config_shift: "/api/config/getShift"
 });

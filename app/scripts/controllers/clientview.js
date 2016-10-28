@@ -152,7 +152,7 @@ angular.module('canteenClientApp')
       }).
       success(function(data) {
         vm.progressBar.complete();
-        toastr.info("Нарачата е успешно извршена!");
+        toastr.info("Нарачката е успешно извршена!");
         $timeout(function() {
             AuthenticationService.logOut();
         }, 1000);

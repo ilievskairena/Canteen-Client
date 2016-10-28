@@ -18,8 +18,17 @@ angular.module('canteenClientApp')
     vm.mealsForDay = [];
     vm.progressBar = ngProgressFactory.createInstance();
 
+    vm.employeeChange = function(employee, index){
+        vm.employeeToServe=employee;
+        vm.removeIndex=index;
+        vm.employeeToServe.MealID=null;
+        vm.MealSelectedForUser = null;
+        vm.guestSelection = [];
+
+    };
 	vm.addCardListener = function(){
     	document.addEventListener("keyup",function(e){
+            console.log(e.key);
 		 	if(e.keyCode != 13){
 		 		vm.cardNumber.push(e.key);
 		  	}
@@ -30,11 +39,11 @@ angular.module('canteenClientApp')
     };
 
     vm.makeNumberString = function(array){
-    	var str="";
-    	for(var i = 0; i < array.length; i++){
-    		str+=array[i];
-    	}
-    	return str;
+        var str="";
+        for(var i = 0; i < array.length; i++){
+            str+=array[i];
+        }
+        return str;
     };
 
     var _checkIfWaiting = function(array,obj){
@@ -47,6 +56,7 @@ angular.module('canteenClientApp')
     };
 
     vm.checkPersonCard = function(card){
+        if(card == null) return;
     	var userCard = vm.makeNumberString(card);
     	$http({
             method: 'GET',
@@ -55,16 +65,14 @@ angular.module('canteenClientApp')
         }).
         success(function(data) {
             console.log(data);
+            vm.getShift();
             var inList = _checkIfWaiting(vm.waitingList,data);
-            if(data != null && data.isRealized != true && inList != true){
-		 		vm.waitingList.push(data);
-		 		vm.cardNumber = [];
-		 		vm.getMealsForDate();
-		 	}
-            else if(data == null){
-                console.log("Data null");
+
+            if(data.Shift != vm.Shift && data.Shift!=0){
+                console.log("User has order in another shift");
+                vm.cardNumber = [];
             }
-            else if(data.IsRealized == true || data.OrderID!=null){
+            else if(data.isRealized == true){
                 console.log("User realized the meal for today");
                 vm.cardNumber = [];
             }
@@ -72,6 +80,12 @@ angular.module('canteenClientApp')
                 console.log("User waiting in line");
                 vm.cardNumber = [];
             }
+            else if(data != null && data.isRealized != true && inList != true){
+                console.log("OK");
+                    vm.waitingList.push(data);
+                    vm.cardNumber = [];
+                    vm.getMealsForDate();
+		 	}
         }).
         error(function(data, status, headers, config) {
             console.log("Error getting user");
@@ -98,14 +112,22 @@ angular.module('canteenClientApp')
     vm.getMealsForShift = function(meals){
         vm.mealsForDay = [];
         for (var i = 0; i < meals.length; i++) {
-            //check hours  - if < some hour set Shift 1 else set shift 2
-            if(meals[i].Shift == 1)
-            vm.mealsForDay.push(meals[i]);
+            if(meals[i].Shift == vm.Shift)
+                vm.mealsForDay.push(meals[i]);
         }
     };
 
-    vm.Shift = function(){
-        return new Date().getHours() < 16 ? 1 : 2;
+    vm.getShift = function(){
+        $http({
+            method: 'GET',
+            crossDomain: true,
+            url: APP_CONFIG.BASE_URL + APP_CONFIG.config_shift
+        }).success(function(data){
+            vm.Shift = data;
+            console.log(data);
+        }).error(function(data,status,headers,config){
+            toastr.error("Грешка при вчитување на тековна смена");
+        });
     };
 
     vm.MealRealized = function(vm){
@@ -119,9 +141,8 @@ angular.module('canteenClientApp')
             MealDescription : vm.employeeToServe.MealDescription,
             Guests : vm.employeeToServe.Guests,
             IsRealized : true,
-            Shift : vm.Shift()
+            Shift : vm.Shift
         };
-        console.log(realizedMeal);
         $http({
             method: 'PUT',
             crossDomain: true,
@@ -145,5 +166,10 @@ angular.module('canteenClientApp')
     if(vm.loggedInUser == null || vm.loggedInUser == undefined) {
         $location.path('/');
     }
-    else vm.addCardListener();
+    else 
+        {
+            vm.addCardListener();
+            vm.getShift();
+        }
+
   });

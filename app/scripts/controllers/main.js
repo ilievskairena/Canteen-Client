@@ -79,7 +79,7 @@ angular.module('canteenClientApp')
     vm.redirect = function() {
     	$location.path("/orders");
     };
-
+/*
 
     vm.checkPersonCard = function(card){
         var userCard = vm.makeNumberString(card);
@@ -100,6 +100,6 @@ angular.module('canteenClientApp')
         error(function(data, status, headers, config) {
             console.log("Error getting user");
         });
-    };
+    };*/
 
   });
