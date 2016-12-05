@@ -137,7 +137,7 @@ angular.module('canteenClientApp')
             UserID : vm.employeeToServe.UserID,
             Name : vm.employeeToServe.Name,
             OrderID : vm.employeeToServe.OrderID != null? vm.employeeToServe.OrderID: -1,
-            MealID: vm.employeeToServe.MealID,
+            MealID: vm.employeeToServe.OrderID != null? vm.employeeToServe.MealID : vm.mealsForDay[0].MealID,
             MealDescription : vm.employeeToServe.MealDescription,
             Guests : vm.employeeToServe.Guests,
             IsRealized : true,

@@ -17,26 +17,27 @@
 			<div class="panel-heading">
 				<span class="glyphicon glyphicon-cutlery"></span>
 				<span ng-show="vm.employeeToServe.OrderID != null">ОДБРАНО МЕНИ:</span>
-				<span ng-show="vm.employeeToServe.OrderID == null">ОДБЕРЕТЕ МЕНИ:</span>
+				<span ng-show="vm.employeeToServe.OrderID == null">ОДБРАНО МЕНИ:</span>
 			</div>
 		  	<div class="panel-body">
 			  	<div ng-show="vm.employeeToServe.OrderID != null">
 					<span>{{vm.employeeToServe.MealType}}</span>
 			  	</div>
 			  	<div ng-show="vm.employeeToServe.OrderID == null">
-			  		<div class="col-md-{{12/vm.mealsForDay.length}}"
-							ng-repeat="meal in vm.mealsForDay">
-				  		<div class="panel panel-success" id="$index" 
-				  			ng-click="vm.employeeToServe.MealID = meal.MealID;vm.MealSelectedForUser = $index" 
-							ng-class="{selectedMenu:vm.MealSelectedForUser == $index}">
-							<div class="panel-heading" ng-class="{selectedMenu:vm.MealSelectedForUser == $index}">
-								<span>{{meal.Type}}</span>
-							</div>
-							<!-- <div class="panel-body">
-								<span>{{meal.MealDescription}}</span>
-							</div> -->
-						</div>
-					</div>
+			  	<span>{{vm.mealsForDay[0].Type}}</span>
+			  		<!-- <div class="col-md-{{12/vm.mealsForDay.length}}"
+			  									ng-repeat="meal in vm.mealsForDay">
+			  						  		<div class="panel panel-success" id="$index" 
+			  						  			ng-click="vm.employeeToServe.MealID = meal.MealID;vm.MealSelectedForUser = $index" 
+			  									ng-class="{selectedMenu:vm.MealSelectedForUser == $index}">
+			  									<div class="panel-heading" ng-class="{selectedMenu:vm.MealSelectedForUser == $index}">
+			  										<span>{{meal.Type}}</span>
+			  									</div>
+			  									<div class="panel-body">
+			  										<span>{{meal.MealDescription}}</span>
+			  									</div>
+			  								</div>
+			  							</div> -->
 			  	</div>
 		  	</div>
 			
