@@ -7,7 +7,8 @@
 			ng-class="{active:vm.employeeToServe == vm.waitingList[$index]}"
 			class="list-group-item peopleListItem" >
 			<span class="glyphicon glyphicon-user"></span>
-		   {{employee.Name}} 
+		   <span ng-if="employee.Name!='Worker'">{{employee.Name}}</span> 
+		   <span ng-if="employee.Name=='Worker'">Соработник/Работник</span> 
 		   <span ng-if="employee.Guests.length!=0" class="badge peopleListItemGuestBadge">{{employee.Guests.length}}</span>
 		 	</a>
 		</div>

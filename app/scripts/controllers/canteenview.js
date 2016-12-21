@@ -54,6 +54,14 @@ angular.module('canteenClientApp')
         }
         return false;
     };
+    var _checkIfWorkerWaiting = function(array,obj){
+        for (var i = 0; i < array.length; i++) {
+            if (array[i].OrderID === obj.OrderID) {
+                return true;
+            }
+        }
+        return false;
+    };
 
     vm.checkPersonCard = function(card){
         if(card == null) return;
@@ -71,6 +79,11 @@ angular.module('canteenClientApp')
             if(data.Shift != vm.Shift && data.Shift!=0){
                 console.log("User has order in another shift");
                 vm.cardNumber = [];
+            }
+            else if(data.Name == "Worker"){
+                    vm.waitingList.push(data);
+                    vm.cardNumber = [];
+                    vm.getMealsForDate();
             }
             else if(data.isRealized == true){
                 console.log("User realized the meal for today");
