@@ -22,13 +22,14 @@ angular.module('canteenClientApp')
 
     vm.items = {
       startIndex: 0,
-      endIndex: 5
+      endIndex: 5,
     };
 
     vm.logout = function() {
       AuthenticationService.logOut();
     };
-        
+       
+    vm.ordersMade = [];    
     vm.nextWeek = function() {
         if(vm.flags.showOtherDays) {
             vm.items.startIndex += 5;
@@ -49,6 +50,12 @@ angular.module('canteenClientApp')
         }
         vm.flags.showOtherDays = (vm.items.endIndex < vm.options.length);
         return result;
+    };
+
+    vm.switchButtons = function(){
+      if(vm.items.endIndex < vm.options.length) 
+        return true;
+      else return false;
     };
 
     vm.isAlreadyOrdered = function() {
@@ -84,6 +91,20 @@ angular.module('canteenClientApp')
       var result = [];
       for(var i in vm.options) {
         var date = vm.options[i];
+        //console.log(date);
+        var dateOrderExists = false;
+        //if there is no meal selected for the date
+        if(date.selectedMeal==null) continue;
+        //if the date has already a order from before
+        for(var i = 0; i < vm.ordersMade.length; i++){
+          if(date.DateID == vm.ordersMade[i].DateID){
+            dateOrderExists = true;
+            break;
+          }
+        }
+
+        if(dateOrderExists) continue;
+
         result.push({
           DateID: date.DateID,
           Date: date.Date,
@@ -95,13 +116,36 @@ angular.module('canteenClientApp')
         });
       }
       console.log(result);
+      if(result.length == 0) return null;
       return result;
     };
 
-    vm.formatPreviewData = function() {
+    /*vm.formatPreviewData = function() {
         var result = [];
         for(var i in vm.options) {
             var date = vm.options[i];
+            for(var j in date.MealChoices) {
+                var meal = date.MealChoices[j];
+                if(meal.MealID == date.selectedMeal) {
+                    result.push({
+                        date : date.Date,
+                        meal : meal.MealDescription,
+                        type : meal.Type,
+                        shift : meal.shift
+                    });
+                    break;
+                }
+            }
+        }
+        return result;
+    };*/
+
+    vm.formatPreviewData = function() {
+        var result = [];
+        console.log(vm.options);
+        for(var i in vm.options) {
+            var date = vm.options[i];
+            if(date.OrderID != null) continue;
             for(var j in date.MealChoices) {
                 var meal = date.MealChoices[j];
                 if(meal.MealID == date.selectedMeal) {
@@ -132,6 +176,11 @@ angular.module('canteenClientApp')
       utility.getOrdersByDateRage(tomorrow, dateTo).then(
       function(result) {
         vm.options = result.data;
+        //console.log(vm.options);
+        for(var i = 0; i< vm.options.length; i++){
+          if(vm.options[i].OrderID!=null)
+            vm.ordersMade.push(vm.options[i]);
+        }
         vm.flags.showOtherDays = result.data.length >= 5;
       }, 
       function(error) {
@@ -141,6 +190,11 @@ angular.module('canteenClientApp')
 
     vm.insert = function() {
       var data = vm.formatData();
+      if(data == null) {
+        $timeout(function() {
+            AuthenticationService.logOut();
+        }, 1000);//if the user entered nothing
+      }
       vm.progressBar.setColor('#8dc63f');
       vm.progressBar.start();
       $http({
@@ -152,7 +206,7 @@ angular.module('canteenClientApp')
       }).
       success(function(data) {
         vm.progressBar.complete();
-        toastr.info("Нарачата е успешно извршена!");
+        toastr.info("Нарачката е успешно извршена!");
         $timeout(function() {
             AuthenticationService.logOut();
         }, 1000);

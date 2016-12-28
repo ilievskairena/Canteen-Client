@@ -1,37 +1,44 @@
-<div class="row" ng-keyup="vm.checkPersonCard()" ng-focus="true">
+<div class="row" ng-keyup="vm.checkPersonCard()" autofocus>
 	<div class="col-md-4 scrollbarDark" id="ordersList">
 		<div class="list-group">
-			<a ng-repeat="employee in vm.waitingList" ng-init="vm.employeeToServe=vm.waitingList[0]" ng-click="vm.employeeToServe=employee;vm.removeIndex=$index;vm.employeeToServe.MealID=null;vm.MealSelectedForUser = null" class="list-group-item peopleListItem" ng-class="{active:vm.employeeToServe == vm.waitingList[$index]}">
+			<a ng-repeat="employee in vm.waitingList" 
+			ng-init="vm.employeeToServe=vm.waitingList[0]" 
+			ng-click="vm.employeeChange(employee,$index)" 
+			ng-class="{active:vm.employeeToServe == vm.waitingList[$index]}"
+			class="list-group-item peopleListItem" >
 			<span class="glyphicon glyphicon-user"></span>
-		   {{employee.Name}} <span ng-if="employee.Guests.length!=0" class="badge peopleListItemGuestBadge">{{employee.Guests.length}}</span>
+		   <span ng-if="employee.Name!='Worker'">{{employee.Name}}</span> 
+		   <span ng-if="employee.Name=='Worker'">Работник</span> 
+		   <span ng-if="employee.Guests.length!=0" class="badge peopleListItemGuestBadge">{{employee.Guests.length}}</span>
 		 	</a>
 		</div>
 	</div>
-	<div id="details" class="col-md-8" ng-if="vm.waitingList.length!=0">
+	<div id="details" class="col-md-8 scrollbarDark" ng-if="vm.waitingList.length!=0">
 		<div class="panel panel-warning menu-selected-details">
 			<div class="panel-heading">
 				<span class="glyphicon glyphicon-cutlery"></span>
 				<span ng-show="vm.employeeToServe.OrderID != null">ОДБРАНО МЕНИ:</span>
-				<span ng-show="vm.employeeToServe.OrderID == null">ОДБЕРЕТЕ МЕНИ:</span>
+				<span ng-show="vm.employeeToServe.OrderID == null">ОДБРАНО МЕНИ:</span>
 			</div>
 		  	<div class="panel-body">
 			  	<div ng-show="vm.employeeToServe.OrderID != null">
-					<span>{{vm.employeeToServe.MealDescription}}</span>
+					<span>{{vm.employeeToServe.MealType}}</span>
 			  	</div>
 			  	<div ng-show="vm.employeeToServe.OrderID == null">
-			  		<div class="col-md-{{12/vm.mealsForDay.length}}"
-							ng-repeat="meal in vm.mealsForDay">
-				  		<div class="panel panel-success" id="$index" 
-				  			ng-click="vm.employeeToServe.MealID = meal.MealID;vm.MealSelectedForUser = $index" 
-							ng-class="{selectedMenu:vm.MealSelectedForUser == $index}">
-							<div class="panel-heading">
-								<span>{{meal.Type}}</span>
-							</div>
-							<div class="panel-body">
-								<span>{{meal.MealDescription}}</span>
-							</div>
-						</div>
-					</div>
+			  	<span>{{vm.defaultMeal.MealDescription}}</span>
+			  		<!-- <div class="col-md-{{12/vm.mealsForDay.length}}"
+			  									ng-repeat="meal in vm.mealsForDay">
+			  						  		<div class="panel panel-success" id="$index" 
+			  						  			ng-click="vm.employeeToServe.MealID = meal.MealID;vm.MealSelectedForUser = $index" 
+			  									ng-class="{selectedMenu:vm.MealSelectedForUser == $index}">
+			  									<div class="panel-heading" ng-class="{selectedMenu:vm.MealSelectedForUser == $index}">
+			  										<span>{{meal.Type}}</span>
+			  									</div>
+			  									<div class="panel-body">
+			  										<span>{{meal.MealDescription}}</span>
+			  									</div>
+			  								</div>
+			  							</div> -->
 			  	</div>
 		  	</div>
 			
@@ -48,12 +55,12 @@
 						<div class="col-md-{{12/vm.mealsForDay.length}}" ng-repeat="meal in vm.mealsForDay">
 							<div class="panel panel-success" id="$index" ng-click="vm.guestSelection[$parent.$index] = $index; vm.employeeToServe.Guests[$parent.$index].MealID = meal.MealID" 
 							ng-class="{selectedMenu:vm.guestSelection[$parent.$index]==$index}">
-								<div class="panel-heading">
+								<div class="panel-heading" ng-class="{selectedMenu:vm.guestSelection[$parent.$index]==$index}">
 									<span>{{meal.Type}}</span>
 								</div>
-								<div class="panel-body">
+								<!-- <div class="panel-body">
 									<span class="menuDescriptionSelect">{{meal.MealDescription}}</span>
-								</div>
+								</div> -->
 							</div>
 						</div>
 					</div>	
