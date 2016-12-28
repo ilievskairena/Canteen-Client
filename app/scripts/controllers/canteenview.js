@@ -16,6 +16,7 @@ angular.module('canteenClientApp')
     vm.guestSelection = [];
 	vm.waitingList = [];
     vm.mealsForDay = [];
+    vm.defaultMeal = '';
     vm.progressBar = ngProgressFactory.createInstance();
 
     vm.employeeChange = function(employee, index){
@@ -63,6 +64,19 @@ angular.module('canteenClientApp')
         return false;
     };
 
+    vm.getDefaultMeal = function(){
+        $http({
+            method: 'GET',
+            crossDomain: true,
+            url: APP_CONFIG.BASE_URL + APP_CONFIG.default_meal
+        }).success(function(data){
+            console.log(data);
+            vm.defaultMeal = data;
+        }).error(function(data, status, headers, config) {
+            console.log("Error getting default meal");
+        });
+    };
+
     vm.checkPersonCard = function(card){
         if(card == null) return;
     	var userCard = vm.makeNumberString(card);
@@ -72,7 +86,8 @@ angular.module('canteenClientApp')
             url: APP_CONFIG.BASE_URL + APP_CONFIG.orders_by_cards + "?cardNumber="+ userCard.toString()
         }).
         success(function(data) {
-            console.log(data);
+            //console.log("GET DATA");
+            //console.log(data);
             vm.getShift();
             var inList = _checkIfWaiting(vm.waitingList,data);
 
@@ -81,6 +96,7 @@ angular.module('canteenClientApp')
                 vm.cardNumber = [];
             }
             else if(data.Name == "Worker"){
+                console.log(data);
                     vm.waitingList.push(data);
                     vm.cardNumber = [];
                     vm.getMealsForDate();
@@ -115,6 +131,7 @@ angular.module('canteenClientApp')
             url: APP_CONFIG.BASE_URL + APP_CONFIG.meals_by_date + "?dateFrom=" + date + "&dateTo="+ date
         }).
         success(function(data) {
+            console.log(data);
             vm.getMealsForShift(data[0].Meals);
         }).
         error(function(data, status, headers, config) {
@@ -150,7 +167,7 @@ angular.module('canteenClientApp')
             UserID : vm.employeeToServe.UserID,
             Name : vm.employeeToServe.Name,
             OrderID : vm.employeeToServe.OrderID != null? vm.employeeToServe.OrderID: -1,
-            MealID: vm.employeeToServe.OrderID != null? vm.employeeToServe.MealID : vm.mealsForDay[0].MealID,
+            MealID: vm.employeeToServe.OrderID != null? vm.employeeToServe.MealID : vm.defaultMeal.MealPerDateID,
             MealDescription : vm.employeeToServe.MealDescription,
             Guests : vm.employeeToServe.Guests,
             IsRealized : true,
@@ -183,6 +200,7 @@ angular.module('canteenClientApp')
         {
             vm.addCardListener();
             vm.getShift();
+            vm.getDefaultMeal();
         }
 
   });

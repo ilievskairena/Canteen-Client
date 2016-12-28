@@ -8,7 +8,7 @@
  * Constant in the canteenClientApp.
  */
 angular.module('canteenClientApp').constant('APP_CONFIG', {
-	BASE_URL: "http://localhost:59700",
+	BASE_URL: "http://localhost:59710",
  	token: "/token",
  	config: "/api/config",
  	client_orders: "/api/client/orders",
@@ -19,6 +19,7 @@ angular.module('canteenClientApp').constant('APP_CONFIG', {
  	dates_allowed: "/api/dates/allowed",
  	dates_update: "/api/dates/update",
  	dates_insert: "/api/dates/insert",
+ 	default_meal: "/api/config/getDefaultMeal",
  	login: "/api/account/login",
  	user_properties: "/api/account/properties",
  	meals: "/api/meals",

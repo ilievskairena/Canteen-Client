@@ -8,7 +8,7 @@
 			class="list-group-item peopleListItem" >
 			<span class="glyphicon glyphicon-user"></span>
 		   <span ng-if="employee.Name!='Worker'">{{employee.Name}}</span> 
-		   <span ng-if="employee.Name=='Worker'">Соработник/Работник</span> 
+		   <span ng-if="employee.Name=='Worker'">Работник</span> 
 		   <span ng-if="employee.Guests.length!=0" class="badge peopleListItemGuestBadge">{{employee.Guests.length}}</span>
 		 	</a>
 		</div>
@@ -25,7 +25,7 @@
 					<span>{{vm.employeeToServe.MealType}}</span>
 			  	</div>
 			  	<div ng-show="vm.employeeToServe.OrderID == null">
-			  	<span>{{vm.mealsForDay[0].Type}}</span>
+			  	<span>{{vm.defaultMeal.MealDescription}}</span>
 			  		<!-- <div class="col-md-{{12/vm.mealsForDay.length}}"
 			  									ng-repeat="meal in vm.mealsForDay">
 			  						  		<div class="panel panel-success" id="$index" 
