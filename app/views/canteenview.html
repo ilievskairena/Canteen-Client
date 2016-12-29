@@ -26,19 +26,6 @@
 			  	</div>
 			  	<div ng-show="vm.employeeToServe.OrderID == null">
 			  	<span>{{vm.defaultMeal.MealDescription}}</span>
-			  		<!-- <div class="col-md-{{12/vm.mealsForDay.length}}"
-			  									ng-repeat="meal in vm.mealsForDay">
-			  						  		<div class="panel panel-success" id="$index" 
-			  						  			ng-click="vm.employeeToServe.MealID = meal.MealID;vm.MealSelectedForUser = $index" 
-			  									ng-class="{selectedMenu:vm.MealSelectedForUser == $index}">
-			  									<div class="panel-heading" ng-class="{selectedMenu:vm.MealSelectedForUser == $index}">
-			  										<span>{{meal.Type}}</span>
-			  									</div>
-			  									<div class="panel-body">
-			  										<span>{{meal.MealDescription}}</span>
-			  									</div>
-			  								</div>
-			  							</div> -->
 			  	</div>
 		  	</div>
 			
@@ -58,9 +45,6 @@
 								<div class="panel-heading" ng-class="{selectedMenu:vm.guestSelection[$parent.$index]==$index}">
 									<span>{{meal.Type}}</span>
 								</div>
-								<!-- <div class="panel-body">
-									<span class="menuDescriptionSelect">{{meal.MealDescription}}</span>
-								</div> -->
 							</div>
 						</div>
 					</div>	

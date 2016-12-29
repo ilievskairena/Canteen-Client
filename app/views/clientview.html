@@ -13,14 +13,14 @@
       </div>
       <div class="col-md-4">
         <button 
-        ng-if="vm.switchButtons()"<!-- vm.flags.showOtherDays && vm.validateButton()
+        ng-if="vm.switchButtons()"
         ng-click="vm.nextWeek()"
         class="btn btn-success btn-lg save-button pull-right no-animate">
           <span>Следни денови</span>
           <i class="fa fa-arrow-right fa-3x" aria-hidden="true"></i>
         </button>
         <button  
-        ng-if="!vm.switchButtons()" <!--vm.flags.showOtherDays && vm.validateButton()  && !vm.isAlreadyOrdered()
+        ng-if="!vm.switchButtons()"
         ng-click="vm.confirm();"
         class="btn btn-success btn-lg save-button pull-right no-animate">
           <i class="fa fa-floppy-o fa-3x"></i>
@@ -31,7 +31,6 @@
   </div>
 </nav>
 <div id="main-content" class="row">
-  <!-- <div layout="row" layout-align="space-around center"> -->
   <div class="col-md-20 animate-repeat"
     ng-if="$index >= vm.items.startIndex && $index < vm.items.endIndex"
     ng-repeat="date in vm.options">
