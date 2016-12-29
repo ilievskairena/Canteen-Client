@@ -1,13 +1,13 @@
 <div class="firstPage" ng-click="vm.focus();">
-	<img src="../images/logo.png" alt="logo" />
- <h1>Добредојдовте во мензата на ПИВАРА АД</h1>
- <input type="text" id="cardTRY" 
- class="card-input"
- ng-model="vm.cardNumber"
- ng-keyup="vm.entryScanner($event)"
- bindKeydown="true"
- autofocus="true"
- focus-me="vm.inputFocus"
- ng-blur="vm.focus()"
- />
+	<img ng-src="./images/logo.png" alt="logo" />
+	<h1>Добредојдовте во мензата на ПИВАРА АД</h1>
+	<input type="text" id="cardTRY" 
+	class="card-input"
+	ng-model="vm.cardNumber"
+	ng-keyup="vm.entryScanner($event)"
+	bindKeydown="true"
+	autofocus="true"
+	focus-me="vm.inputFocus"
+	ng-blur="vm.focus()"
+	/>
 </div>
