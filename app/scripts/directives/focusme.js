@@ -1,13 +1,18 @@
-'use strict';
+(function(){
+  'use strict';
 
-/**
- * @ngdoc directive
- * @name canteenClientApp.directive:focusMe
- * @description
- * # focusMe
- */
-angular.module('canteenClientApp')
-  .directive('focusMe', function($timeout) {
+  /**
+  * @ngdoc directive
+  * @name canteenClientApp.directive:focusMe
+  * @description
+  * # focusMe
+  */
+  angular.module('canteenClientApp')
+  .directive('focusMe', focusMe);
+
+  focusMe.$inject = [];
+
+  function focusMe(){
   return {
     scope: { trigger: '=focusMe' },
     link: function(scope, element) {
@@ -19,4 +24,5 @@ angular.module('canteenClientApp')
       });
     }
   };
-});
+}
+})();

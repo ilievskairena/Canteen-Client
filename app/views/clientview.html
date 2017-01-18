@@ -12,15 +12,14 @@
         <h3 class="text-center"><em>{{vm.loggedInUser.Name}}</em></h3>
       </div>
       <div class="col-md-4">
-        <button 
+        <!-- <button 
         ng-if="vm.switchButtons()"<!-- vm.flags.showOtherDays && vm.validateButton()
         ng-click="vm.nextWeek()"
         class="btn btn-success btn-lg save-button pull-right no-animate">
           <span>Следни денови</span>
           <i class="fa fa-arrow-right fa-3x" aria-hidden="true"></i>
-        </button>
-        <button  
-        ng-if="!vm.switchButtons()" <!--vm.flags.showOtherDays && vm.validateButton()  && !vm.isAlreadyOrdered()
+        </button> -->
+        <button
         ng-click="vm.confirm();"
         class="btn btn-success btn-lg save-button pull-right no-animate">
           <i class="fa fa-floppy-o fa-3x"></i>
@@ -36,7 +35,7 @@
     ng-if="$index >= vm.items.startIndex && $index < vm.items.endIndex"
     ng-repeat="date in vm.options">
     <div class="panel"
-    ng-init="date.shift = date.ChosenShift;date.selectedMeal = date.MealID;"
+    ng-init="date.shift = date.ChosenShift; date.selectedMeal = date.MealID;"
     ng-class="{'panel-primary' : $even, 'panel-success' : $odd }">
       <!-- Title -->
       <div class="panel-heading">
@@ -46,7 +45,14 @@
         </h1>
       </div>
       <!-- Body -->
-      <div class="panel-body">
+      <div class="panel-body" ng-if="date.isHoliday">
+        <div class="row">
+          <div class="col-md-4">
+            <h4 class="page-heading meal-headings">ПРАЗНИК</h4>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body" ng-if="!date.isHoliday">
         <div class="row shift">
           <div class="col-md-4">
             <h4 class="page-heading meal-headings">СМЕНА</h4>
@@ -54,16 +60,16 @@
           <div class="col-md-4">
             <a class="btn btn-shift"
             ng-click="vm.selectShift(date, 1);"
-            ng-class="{'btn-success': (date.shift == 1 && $odd), 
-            'btn-primary' : (date.shift == 1 && $even), 
-            'btn-default': date.shift != 1}">
+            ng-class="{'btn-success': (date.shift === 1 && $odd), 
+            'btn-primary' : (date.shift === 1 && $even), 
+            'btn-default': date.shift !== 1}">
               <span class="btn-text-first">I</span>
             </a>
           </div>
           <div class="col-md-4">
             <a class="btn btn-default btn-shift"
              ng-click="vm.selectShift(date, 2);"
-             ng-class="{'btn-success': (date.shift == 2 && $odd), 'btn-primary' : (date.shift == 2 && $even), 'btn-default': date.shift != 2}">
+             ng-class="{'btn-success': (date.shift === 2 && $odd), 'btn-primary' : (date.shift === 2 && $even), 'btn-default': date.shift !== 2}">
               <span class="btn-text-second">II</span>
             </a>
           </div>
@@ -71,8 +77,8 @@
         <div class="row">
           <div class="list-group">
             <a class="list-group-item no-animate"
-            ng-class="{'active' : (date.selectedMeal == meal.MealID &&  $parent.$parent.$even ), 'active-success' :  (date.selectedMeal == meal.MealID &&  $parent.$parent.$odd)}"
-            ng-if="date.shift == meal.Shift"
+            ng-class="{'active' : (date.selectedMeal === meal.MealID &&  $parent.$parent.$even ), 'active-success' :  (date.selectedMeal === meal.MealID &&  $parent.$parent.$odd)}"
+            ng-if="date.shift === meal.Shift"
             ng-click="vm.selectMeal(date, meal)"
             ng-repeat="meal in date.MealChoices">
               <h4 class="list-group-item-heading">{{meal.Type}}</h4>
@@ -87,13 +93,13 @@
           </div>
           <div class="col-md-8">
             <a class="btn btn-default btn-shift"
-            ng-disabled="date.Guests == 0 || date.OrderID != null"
+            ng-disabled="date.Guests === 0 || date.OrderID !== null"
             ng-click="vm.removeGuest(date)">
               <span class="btn-text-minus">-</span>
             </a>
             <h3 class="control-guest">{{date.Guests}}</h3>
             <a class="btn btn-default btn-shift"
-            ng-disabled="date.OrderID != null"
+            ng-disabled="date.OrderID !== null"
              ng-click="vm.addGuest(date)">
               <span class="btn-text-plus">+</span>
             </a>

@@ -8,6 +8,7 @@
  * Constant in the canteenClientApp.
  */
 angular.module('canteenClientApp').constant('APP_CONFIG', {
+	//BASE_URL: "http://10.203.176.30:8545",
 	BASE_URL: "http://localhost:59710",
  	token: "/token",
  	config: "/api/config",

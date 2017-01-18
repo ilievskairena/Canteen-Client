@@ -1,4 +1,5 @@
-'use strict';
+(function(){
+    'use strict';
 
 /**
  * @ngdoc function
@@ -7,200 +8,240 @@
  * # CanteenviewCtrl
  * Controller of the canteenClientApp
  */
-angular.module('canteenClientApp')
-  .controller('CanteenviewCtrl', function ($http, $filter, $location, APP_CONFIG, AuthenticationService, localStorageService, ngProgressFactory, toastr) {
-    var vm = this;
+    angular.module('canteenClientApp')
+    .controller('CanteenviewCtrl', CanteenviewCtrl);
 
-    vm.loggedInUser = localStorageService.get('user');
-	vm.cardNumber= [];
-    vm.guestSelection = [];
-	vm.waitingList = [];
-    vm.mealsForDay = [];
-    vm.defaultMeal = '';
-    vm.progressBar = ngProgressFactory.createInstance();
+    CanteenviewCtrl.$inject = ['$http', '$filter', '$location', 'APP_CONFIG', 'localStorageService', 'ngProgressFactory', 'toastr'];
 
-    vm.employeeChange = function(employee, index){
-        vm.employeeToServe=employee;
-        vm.removeIndex=index;
-        vm.employeeToServe.MealID=null;
-        vm.MealSelectedForUser = null;
+    function CanteenviewCtrl($http, $filter, $location, APP_CONFIG, localStorageService, ngProgressFactory, toastr) {
+        
+        var vm = this;
+
+        vm.loggedInUser = localStorageService.get('user');
+        vm.cardNumber= [];
         vm.guestSelection = [];
-
-    };
-	vm.addCardListener = function(){
-    	document.addEventListener("keyup",function(e){
-            console.log(e.key);
-		 	if(e.keyCode != 13){
-		 		vm.cardNumber.push(e.key);
-		  	}
-            else if(e.keyCode==13){
-                vm.checkPersonCard(vm.cardNumber);
-            }
-    	}, false);
-    };
-
-    vm.makeNumberString = function(array){
-        var str="";
-        for(var i = 0; i < array.length; i++){
-            str+=array[i];
-        }
-        return str;
-    };
-
-    var _checkIfWaiting = function(array,obj){
-        for (var i = 0; i < array.length; i++) {
-            if (array[i].UserID === obj.UserID) {
-                return true;
-            }
-        }
-        return false;
-    };
-    var _checkIfWorkerWaiting = function(array,obj){
-        for (var i = 0; i < array.length; i++) {
-            if (array[i].OrderID === obj.OrderID) {
-                return true;
-            }
-        }
-        return false;
-    };
-
-    vm.getDefaultMeal = function(){
-        $http({
-            method: 'GET',
-            crossDomain: true,
-            url: APP_CONFIG.BASE_URL + APP_CONFIG.default_meal
-        }).success(function(data){
-            console.log(data);
-            vm.defaultMeal = data;
-        }).error(function(data, status, headers, config) {
-            console.log("Error getting default meal");
-        });
-    };
-
-    vm.checkPersonCard = function(card){
-        if(card == null) return;
-    	var userCard = vm.makeNumberString(card);
-    	$http({
-            method: 'GET',
-            crossDomain: true,
-            url: APP_CONFIG.BASE_URL + APP_CONFIG.orders_by_cards + "?cardNumber="+ userCard.toString()
-        }).
-        success(function(data) {
-            //console.log("GET DATA");
-            //console.log(data);
-            vm.getShift();
-            var inList = _checkIfWaiting(vm.waitingList,data);
-
-            if(data.Shift != vm.Shift && data.Shift!=0){
-                console.log("User has order in another shift");
-                vm.cardNumber = [];
-            }
-            else if(data.Name == "Worker"){
-                console.log(data);
-                    vm.waitingList.push(data);
-                    vm.cardNumber = [];
-                    vm.getMealsForDate();
-            }
-            else if(data.isRealized == true){
-                console.log("User realized the meal for today");
-                vm.cardNumber = [];
-            }
-            else if(inList == true){
-                console.log("User waiting in line");
-                vm.cardNumber = [];
-            }
-            else if(data != null && data.isRealized != true && inList != true){
-                console.log("OK");
-                    vm.waitingList.push(data);
-                    vm.cardNumber = [];
-                    vm.getMealsForDate();
-		 	}
-        }).
-        error(function(data, status, headers, config) {
-            console.log("Error getting user");
-            vm.cardNumber = [];
-        });
-    };
-
-    vm.getMealsForDate = function(){
-    	var today = new Date();
-        var date = $filter("date")(today, "yyyy-MM-dd 00:00:00.000");
-		$http({
-            method: 'GET',
-            crossDomain: true,
-            url: APP_CONFIG.BASE_URL + APP_CONFIG.meals_by_date + "?dateFrom=" + date + "&dateTo="+ date
-        }).
-        success(function(data) {
-            console.log(data);
-            vm.getMealsForShift(data[0].Meals);
-        }).
-        error(function(data, status, headers, config) {
-            toastr.error("Грешка при вчитување на оброк!");
-        });
-	};
-
-    vm.getMealsForShift = function(meals){
+        vm.waitingList = [];
         vm.mealsForDay = [];
-        for (var i = 0; i < meals.length; i++) {
-            if(meals[i].Shift == vm.Shift)
-                vm.mealsForDay.push(meals[i]);
+        vm.defaultMeal = '';
+        vm.progressBar = ngProgressFactory.createInstance();
+
+        // Functions
+
+        vm.addCardListener = addCardListener;
+        vm.checkPersonCard = checkPersonCard;
+        vm.employeeChange = employeeChange;
+        vm.getDefaultMeal = getDefaultMeal;
+        vm.getMealsForDate = getMealsForDate;
+        vm.getMealsForShift = getMealsForShift;
+        vm.getShift = getShift;
+        vm.makeNumberString = makeNumberString;
+        vm.MealRealized = MealRealized;
+
+        // Init
+
+        if(vm.loggedInUser === null || vm.loggedInUser === undefined) {
+            $location.path('/');
         }
-    };
-
-    vm.getShift = function(){
-        $http({
-            method: 'GET',
-            crossDomain: true,
-            url: APP_CONFIG.BASE_URL + APP_CONFIG.config_shift
-        }).success(function(data){
-            vm.Shift = data;
-            console.log(data);
-        }).error(function(data,status,headers,config){
-            toastr.error("Грешка при вчитување на тековна смена");
-        });
-    };
-
-    vm.MealRealized = function(vm){
-        vm.progressBar.setColor('#8dc63f');
-        vm.progressBar.start();
-        var realizedMeal = {
-            UserID : vm.employeeToServe.UserID,
-            Name : vm.employeeToServe.Name,
-            OrderID : vm.employeeToServe.OrderID != null? vm.employeeToServe.OrderID: -1,
-            MealID: vm.employeeToServe.OrderID != null? vm.employeeToServe.MealID : vm.defaultMeal.MealPerDateID,
-            MealDescription : vm.employeeToServe.MealDescription,
-            Guests : vm.employeeToServe.Guests,
-            IsRealized : true,
-            Shift : vm.Shift
-        };
-        $http({
-            method: 'PUT',
-            crossDomain: true,
-            url: APP_CONFIG.BASE_URL + APP_CONFIG.orders_realize,
-            data: realizedMeal
-        }).
-        success(function(data) {
-            vm.progressBar.complete();
-            toastr.info("Нарачката е успешно реализирана!");
-            var removed = vm.waitingList.splice(vm.removeIndex,1);
-            vm.employeeToServe=vm.waitingList[0];
-            vm.guestSelection = [];
-        }).
-        error(function(data, status, headers, config) {
-          toastr.error("Реализацијата не е зачувана. Ве молиме обидете се повторно!");
-          vm.progressBar.setColor('red');
-          vm.progressBar.reset();
-        });
-    };
-
-    if(vm.loggedInUser == null || vm.loggedInUser == undefined) {
-        $location.path('/');
-    }
-    else 
+        else 
         {
-            vm.addCardListener();
-            vm.getShift();
-            vm.getDefaultMeal();
+            addCardListener();
+            getShift();
+            getDefaultMeal();
         }
 
-  });
+        // Define Functions here
+
+        function addCardListener(){
+            document.addEventListener("keyup",function(e){
+                if(e.keyCode !== 13){
+                    vm.cardNumber.push(e.key);
+                }
+                else if(e.keyCode === 13){
+                    checkPersonCard(vm.cardNumber);
+                }
+            }, false);
+        }
+
+        function checkPersonCard(card){
+
+            if(card === null){
+              return;  
+            } 
+
+            var userCard = makeNumberString(card);
+            $http({
+                method: 'GET',
+                crossDomain: true,
+                url: APP_CONFIG.BASE_URL + APP_CONFIG.orders_by_cards + "?cardNumber="+ userCard.toString()
+            }).then(function successCallback(response){
+                var data = response.data;
+                getShift();
+                var inList = _checkIfWaiting(vm.waitingList,data);
+
+                if(data.Shift !== vm.Shift && data.Shift !== 0){
+                    toastr.info("Корисникот има нарачка во друга смена!");
+                    vm.cardNumber = [];
+                }
+                else if(data.Name === "Worker"){
+                    vm.waitingList.push(data);
+                    vm.cardNumber = [];
+                    getMealsForDate();
+                }
+                else if(data.isRealized === true){
+                    toastr.info("Корисникот веќе ја реализирал нарачката!");
+                    console.log("User realized the meal for today");
+                    vm.cardNumber = [];
+                }
+                else if(inList === true){
+                    toastr.info("Корисникот е веќе во редот!");
+                    console.log("User waiting in line");
+                    vm.cardNumber = [];
+                }
+                else if(data !== null && data.isRealized !== true && inList !== true){
+                    console.log("OK");
+                    vm.waitingList.push(data);
+                    vm.cardNumber = [];
+                    getMealsForDate();
+                }
+
+            }, function errorCallback(response){
+                toastr.error("Грешка во системот! Ве молиме обидете се повторно. Доколку проблемот продолжи, известете го администраторот!");
+                console.log("Error getting user", response);
+                vm.cardNumber = [];
+            });
+        }
+
+        function employeeChange(employee, index){
+            vm.employeeToServe = employee;
+            vm.removeIndex = index;
+            vm.employeeToServe.MealID = null;
+            vm.MealSelectedForUser = null;
+            vm.guestSelection = [];
+        }
+
+        function getDefaultMeal(){
+            $http({
+                method: 'GET',
+                crossDomain: true,
+                url: APP_CONFIG.BASE_URL + APP_CONFIG.default_meal
+            }).then(function successCallback(response){
+
+                console.log(response.data);
+                vm.defaultMeal = response.data;
+
+            }, function errorCallback(response){
+
+                toastr.error("Грешка при превземањето на default оброк. Ве молиме освежете го прозорецот и обидете се повторно!");
+                console.log("Error getting default meal", response);
+
+            });
+            
+        }
+
+        function getMealsForDate(){
+            var today = new Date();
+            var date = $filter("date")(today, "yyyy-MM-dd 00:00:00.000");
+            $http({
+                method: 'GET',
+                crossDomain: true,
+                url: APP_CONFIG.BASE_URL + APP_CONFIG.meals_by_date + "?dateFrom=" + date + "&dateTo="+ date
+            }).then(function successCallback(response){
+
+                console.log(response.data);
+                getMealsForShift(response.data[0].Meals);
+
+            }, function errorCallback(response){
+                toastr.error("Грешка при вчитување на оброк!");
+                console.log('Error getting meal', response);
+            });
+        }
+
+        function getMealsForShift(meals){
+            vm.mealsForDay = [];
+            for (var i = 0; i < meals.length; i++) {
+                if(meals[i].Shift === vm.Shift){
+
+                    vm.mealsForDay.push(meals[i]);
+                }
+            }
+        }
+
+        function getShift(){
+            $http({
+                method: 'GET',
+                crossDomain: true,
+                url: APP_CONFIG.BASE_URL + APP_CONFIG.config_shift
+            }).then(function successCallback(response){
+
+                vm.Shift = response.data;
+                console.log(response.data);
+
+            }, function errorCallback(response){
+                toastr.error("Грешка при вчитување на тековна смена");
+                console.log("Error getting shift", response);
+            });
+        }
+        
+        function makeNumberString(array){
+            var str="";
+            for(var i = 0; i < array.length; i++){
+                str+=array[i];
+            }
+            return str;
+        }
+
+        function MealRealized(){
+            vm.progressBar.setColor('#8dc63f');
+            vm.progressBar.start();
+            var realizedMeal = {
+                UserID : vm.employeeToServe.UserID,
+                Name : vm.employeeToServe.Name,
+                OrderID : vm.employeeToServe.OrderID !== null? vm.employeeToServe.OrderID: -1,
+                MealID: vm.employeeToServe.OrderID !== null? vm.employeeToServe.MealID : vm.defaultMeal.MealPerDateID,
+                MealDescription : vm.employeeToServe.MealDescription,
+                Guests : vm.employeeToServe.Guests,
+                IsRealized : true,
+                Shift : vm.Shift
+            };
+            $http({
+                method: 'PUT',
+                crossDomain: true,
+                url: APP_CONFIG.BASE_URL + APP_CONFIG.orders_realize,
+                data: realizedMeal
+            }).then(function successCallback(response){
+                console.log(response);
+                vm.progressBar.complete();
+                toastr.info("Нарачката е успешно реализирана!");
+                vm.waitingList.splice(vm.removeIndex,1);
+                vm.employeeToServe=vm.waitingList[0];
+                vm.guestSelection = [];
+
+            }, function errorCallback(response){
+                toastr.error("Реализацијата не е зачувана. Ве молиме обидете се повторно!");
+                vm.progressBar.setColor('red');
+                vm.progressBar.reset();
+                console.log("Error saving", response);
+            });
+        }
+
+        // Define local functions here
+
+        function _checkIfWaiting(array,obj){
+            for (var i = 0; i < array.length; i++) {
+                if (array[i].UserID === obj.UserID) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // function _checkIfWorkerWaiting(array,obj){
+        //     for (var i = 0; i < array.length; i++) {
+        //         if (array[i].OrderID === obj.OrderID) {
+        //             return true;
+        //         }
+        //     }
+        //     return false;
+        // }
+    }
+})();
