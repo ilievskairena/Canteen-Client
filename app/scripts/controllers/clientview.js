@@ -8,13 +8,16 @@
  * # ClientviewCtrl
  * Controller of the canteenClientApp
  */
+
+  /* jshint latedef:nofunc */
+  
   angular.module('canteenClientApp')
   .controller('ClientviewCtrl', ClientviewCtrl);
 
   ClientviewCtrl.$inject = ['$scope', '$timeout', 'toastr', '$location', '$route', 'APP_CONFIG', 'ngDialog', '$http', '$filter', 'utility', 'AuthenticationService', 'localStorageService', 'ngProgressFactory'];
 
   function ClientviewCtrl($scope, $timeout, toastr, $location, $route, APP_CONFIG, ngDialog, $http, $filter, utility, AuthenticationService, localStorageService, ngProgressFactory) {
-
+/* jshint validthis: true */
     var vm = this;
     vm.loggedInUser = localStorageService.get('user');
 

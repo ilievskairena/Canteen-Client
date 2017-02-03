@@ -9,6 +9,9 @@
 	 * # dayoftheweek
 	 * Filter in the canteenClientApp.
 	 */
+
+	 /* jshint latedef:nofunc */
+	 
 	angular.module('canteenClientApp')
   	.filter('dayoftheweek', dayoftheweek);
 

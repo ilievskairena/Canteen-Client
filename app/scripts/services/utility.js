@@ -8,13 +8,16 @@
      * # utility
      * Service in the canteenClientApp.
      */
+     
+     /* jshint latedef:nofunc */
+
     angular.module('canteenClientApp')
     .service('utility', utility);
 
     utility.$inject = ['APP_CONFIG', '$http'];
 
     function utility(APP_CONFIG, $http) {
-
+        /* jshint validthis: true */
         this.getPlanByDateRage = getPlanByDateRage;
         this.getOrdersByDateRage = getOrdersByDateRage;
         this.getThisWeekEnd = getThisWeekEnd;

@@ -8,6 +8,9 @@
      * # AuthenticationService
      * Service in the canteenClientApp.
      */
+     
+     /* jshint latedef:nofunc */
+
     angular.module('canteenClientApp')
     .service('AuthenticationService',  AuthenticationService);
 

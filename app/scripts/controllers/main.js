@@ -8,13 +8,16 @@
     * # MainCtrl
     * Controller of the canteenClientApp
     */
+
+     /* jshint latedef:nofunc */
+     
     angular.module('canteenClientApp')
     .controller('MainCtrl', MainCtrl);
 
     MainCtrl.$inject = ['$http', '$rootScope', 'localStorageService', '$location', '$timeout', 'APP_CONFIG', 'AuthenticationService', 'toastr', 'ngProgressFactory'];
 
     function MainCtrl($http, $rootScope, localStorageService, $location, $timeout, APP_CONFIG, AuthenticationService, toastr, ngProgressFactory) {
-
+        /* jshint validthis: true */
         var vm = this;
         //Incharge for the card field to be focused
         vm.inputFocus = true;

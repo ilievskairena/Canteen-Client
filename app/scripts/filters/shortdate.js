@@ -9,6 +9,9 @@
 	 * # shortdate
 	 * Filter in the canteenClientApp.
 	 */
+
+	 /* jshint latedef:nofunc */
+	 
 	angular.module('canteenClientApp')
   	.filter('shortdate', shortdate);
 

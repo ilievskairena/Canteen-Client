@@ -7,6 +7,9 @@
   * @description
   * # focusMe
   */
+
+  /* jshint latedef:nofunc */
+  
   angular.module('canteenClientApp')
   .directive('focusMe', focusMe);
 
