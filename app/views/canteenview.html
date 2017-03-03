@@ -7,57 +7,44 @@
 			ng-class="{active:vm.employeeToServe === vm.waitingList[$index]}"
 			class="list-group-item peopleListItem" >
 			<span class="glyphicon glyphicon-user"></span>
-		   <span ng-if="employee.Name !== 'Worker'">{{employee.Name}}</span> 
-		   <span ng-if="employee.Name === 'Worker'">Работник</span> 
-		   <span ng-if="employee.Guests.length !== 0" class="badge peopleListItemGuestBadge">{{employee.Guests.length}}</span>
-		 	</a>
+			<span ng-if="employee.Name !== 'Worker'">{{employee.Name}}</span> 
+			<span ng-if="employee.Name === 'Worker'">Работник</span> 
+			<span ng-if="employee.Guests.length !== 0" class="badge peopleListItemGuestBadge">{{employee.Guests.length}}</span>
+		</a>
+	</div>
+</div>
+<div id="details" class="col-md-8 scrollbarDark" ng-if="vm.waitingList.length !== 0">
+	<div class="panel panel-warning menu-selected-details">
+		<div class="panel-heading">
+			<span class="glyphicon glyphicon-cutlery"></span>
+			<span ng-show="vm.employeeToServe.OrderID !== null">ОДБРАНО МЕНИ:</span>
+			<span ng-show="vm.employeeToServe.OrderID === null">DEFAULT МЕНИ:</span>
+		</div>
+		<div class="panel-body">
+			<div ng-show="vm.employeeToServe.OrderID !== null">
+				<span>{{vm.employeeToServe.MealType}}</span>
+			</div>
+			<div ng-show="vm.employeeToServe.OrderID === null">
+				<span>{{vm.defaultMeal.Description}}</span>
+			</div>
 		</div>
 	</div>
-	<div id="details" class="col-md-8 scrollbarDark" ng-if="vm.waitingList.length !== 0">
-		<div class="panel panel-warning menu-selected-details">
+
+	<div ng-show="vm.employeeToServe.Guests !== null && vm.employeeToServe.Guests.length !== 0">
+		<div class="panel panel-beige guest-select">
 			<div class="panel-heading">
-				<span class="glyphicon glyphicon-cutlery"></span>
-				<span ng-show="vm.employeeToServe.OrderID !== null">ОДБРАНО МЕНИ:</span>
-				<span ng-show="vm.employeeToServe.OrderID === null">ОДБРАНО МЕНИ:</span>
+				<i class="fa fa-users" aria-hidden="true"></i>
+				<span>ГОСТИ</span>
 			</div>
-		  	<div class="panel-body">
-			  	<div ng-show="vm.employeeToServe.OrderID !== null">
-					<span>{{vm.employeeToServe.MealType}}</span>
-			  	</div>
-			  	<div ng-show="vm.employeeToServe.OrderID === null">
-			  		<span>{{vm.defaultMeal.MealDescription}}</span>
-			  		<!-- <div class="col-md-{{12/vm.mealsForDay.length}}"
-			  									ng-repeat="meal in vm.mealsForDay">
-			  						  		<div class="panel panel-success" id="$index" 
-			  						  			ng-click="vm.employeeToServe.MealID = meal.MealID;vm.MealSelectedForUser = $index" 
-			  									ng-class="{selectedMenu:vm.MealSelectedForUser == $index}">
-			  									<div class="panel-heading" ng-class="{selectedMenu:vm.MealSelectedForUser == $index}">
-			  										<span>{{meal.Type}}</span>
-			  									</div>
-			  									<div class="panel-body">
-			  										<span>{{meal.MealDescription}}</span>
-			  									</div>
-			  								</div>
-			  							</div> -->
-			  	</div>
-		  	</div>
-			
-		</div>
-		<div ng-show="vm.employeeToServe.Guests !== null && vm.employeeToServe.Guests.length !== 0">
-			<div class="panel panel-beige guest-select">
-				<div class="panel-heading">
-					<i class="fa fa-users" aria-hidden="true"></i>
-					<span>ГОСТИ</span>
-				</div>
-				<div class="panel-body">
-					<div ng-repeat="guest in vm.employeeToServe.Guests">
-						<p class="guestSeq">ГОСТИН {{$index+1}}</p>
-						<div class="col-md-{{12/vm.mealsForDay.length}}" ng-repeat="meal in vm.mealsForDay">
-							<div class="panel panel-success" id="$index" ng-click="vm.guestSelection[$parent.$index] = $index; vm.employeeToServe.Guests[$parent.$index].MealID = meal.MealID" 
-							ng-class="{selectedMenu:vm.guestSelection[$parent.$index] === $index}">
-								<div class="panel-heading" ng-class="{selectedMenu:vm.guestSelection[$parent.$index] === $index}">
-									<span>{{meal.Type}}</span>
-								</div>
+			<div class="panel-body">
+				<div ng-repeat="guest in vm.employeeToServe.Guests">
+					<p class="guestSeq">ГОСТИН {{$index+1}}</p>
+					<div class="col-md-{{12/vm.mealsForDay.length}}" ng-repeat="meal in vm.mealsForDay">
+						<div class="panel panel-success" id="$index" ng-click="vm.guestSelection[$parent.$index] = $index; vm.employeeToServe.Guests[$parent.$index].MealID = meal.MealID" 
+						ng-class="{selectedMenu:vm.guestSelection[$parent.$index] === $index}">
+						<div class="panel-heading" ng-class="{selectedMenu:vm.guestSelection[$parent.$index] === $index}">
+							<span>{{meal.Type}}</span>
+						</div>
 								<!-- <div class="panel-body">
 									<span class="menuDescriptionSelect">{{meal.MealDescription}}</span>
 								</div> -->
@@ -68,7 +55,8 @@
 			</div>
 		</div>
 		<div class="row divRealized">
-		<button class="btn-success buttonRealized" ng-click="vm.MealRealized()">РЕАЛИЗИРАНО</button>
+			<button class="btn-success buttonRealized" ng-click="vm.MealRealized()">РЕАЛИЗИРАНО</button>
+		</div>
 	</div>
-	</div>
+	
 </div>

@@ -27,6 +27,7 @@
         vm.mealsForDay = [];
         vm.defaultMeal = '';
         vm.progressBar = ngProgressFactory.createInstance();
+        vm.mealSelectedForUser = undefined;
 
         // Functions
 
@@ -81,7 +82,7 @@
                 getShift();
                 var inList = _checkIfWaiting(vm.waitingList,data);
 
-                if(data.Shift !== vm.Shift && data.Shift !== 0){
+                if(data.Shift !== vm.Shift && data.Shift !== 0 && data.isRealized === false){
                     toastr.info("Корисникот има нарачка во друга смена!");
                     vm.cardNumber = [];
                 }
@@ -106,10 +107,11 @@
                     vm.cardNumber = [];
                     getMealsForDate();
                 }
+                
 
             }, function errorCallback(response){
                 toastr.error("Грешка во системот! Ве молиме обидете се повторно. Доколку проблемот продолжи, известете го администраторот!");
-                console.log("Error getting user", response);
+                console.log("Error getting user");
                 vm.cardNumber = [];
             });
         }
@@ -129,13 +131,12 @@
                 url: APP_CONFIG.BASE_URL + APP_CONFIG.default_meal
             }).then(function successCallback(response){
 
-                console.log(response.data);
                 vm.defaultMeal = response.data;
 
             }, function errorCallback(response){
 
                 toastr.error("Грешка при превземањето на default оброк. Ве молиме освежете го прозорецот и обидете се повторно!");
-                console.log("Error getting default meal", response);
+                console.log("Error getting default meal");
 
             });
             
@@ -150,12 +151,11 @@
                 url: APP_CONFIG.BASE_URL + APP_CONFIG.meals_by_date + "?dateFrom=" + date + "&dateTo="+ date
             }).then(function successCallback(response){
 
-                console.log(response.data);
                 getMealsForShift(response.data[0].Meals);
 
             }, function errorCallback(response){
                 toastr.error("Грешка при вчитување на оброк!");
-                console.log('Error getting meal', response);
+                console.log('Error getting meal');
             });
         }
 
@@ -177,11 +177,10 @@
             }).then(function successCallback(response){
 
                 vm.Shift = response.data;
-                console.log(response.data);
 
             }, function errorCallback(response){
                 toastr.error("Грешка при вчитување на тековна смена");
-                console.log("Error getting shift", response);
+                console.log("Error getting shift");
             });
         }
         
@@ -200,7 +199,7 @@
                 UserID : vm.employeeToServe.UserID,
                 Name : vm.employeeToServe.Name,
                 OrderID : vm.employeeToServe.OrderID !== null? vm.employeeToServe.OrderID: -1,
-                MealID: vm.employeeToServe.OrderID !== null? vm.employeeToServe.MealID : vm.defaultMeal.MealPerDateID,
+                MealID: vm.employeeToServe.OrderID !== null? vm.employeeToServe.MealID : vm.defaultMeal.ID,
                 MealDescription : vm.employeeToServe.MealDescription,
                 Guests : vm.employeeToServe.Guests,
                 IsRealized : true,
@@ -212,18 +211,18 @@
                 url: APP_CONFIG.BASE_URL + APP_CONFIG.orders_realize,
                 data: realizedMeal
             }).then(function successCallback(response){
-                console.log(response);
                 vm.progressBar.complete();
                 toastr.info("Нарачката е успешно реализирана!");
                 vm.waitingList.splice(vm.removeIndex,1);
                 vm.employeeToServe=vm.waitingList[0];
                 vm.guestSelection = [];
+                vm.mealSelectedForUser = undefined;
 
             }, function errorCallback(response){
                 toastr.error("Реализацијата не е зачувана. Ве молиме обидете се повторно!");
                 vm.progressBar.setColor('red');
                 vm.progressBar.reset();
-                console.log("Error saving", response);
+                console.log("Error saving");
             });
         }
 

@@ -116,7 +116,6 @@
           MealChoices : []
         });
       }
-      console.log(result);
       if(result.length === 0){
         return null;
       } 
@@ -125,7 +124,6 @@
 
     function formatPreviewData() {
       var result = [];
-      console.log(vm.options);
       for(var i in vm.options) {
         var date = vm.options[i];
         if(date.OrderID !== null){
@@ -171,7 +169,6 @@
 
       utility.getOrdersByDateRage(dateFrom, dateTo).then(
         function(result) {
-          console.log(result);
           vm.options = result.data;
         //console.log(vm.options);
         for(var i = 0; i < vm.options.length; i++){
@@ -202,7 +199,6 @@
         url:  APP_CONFIG.BASE_URL + APP_CONFIG.client_orders_save,
         data: data
       }).then(function successCallback(response) {
-        console.log(response);
         vm.progressBar.complete();
         toastr.info("Нарачката е успешно извршена!");
         $timeout(function() {
@@ -212,7 +208,7 @@
         toastr.error("Нарачката не е зачувана. Ве молиме обидете се повторно!");
         vm.progressBar.setColor('red');
         vm.progressBar.reset();
-        console.log("Error saving order", response);
+        console.log("Error saving order");
       });
     }
 

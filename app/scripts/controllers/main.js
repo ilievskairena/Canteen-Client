@@ -62,7 +62,6 @@
             AuthenticationService.login(vm.user).then(
                 function(response)
                 {
-                    console.log(response);
                     profileProperties();
                 },
                 function(error) {
@@ -70,7 +69,7 @@
                     vm.progressBar.reset();
                     vm.cardNumber = "";
                     toastr.error("Грешка!","Вашата картичка не е регистрирана во системот");
-                    console.log("Error with card", error);
+                    console.log("Error with card");
                 });
         }
 
@@ -98,7 +97,7 @@
                 vm.progressBar.reset();
                 AuthenticationService.logOut();
                 toastr.error("Грешка при најава, ве молиме обидете се повторно!");
-                console.log("Error with authenticating", response);
+                console.log("Error with authenticating");
             });
         }
 
