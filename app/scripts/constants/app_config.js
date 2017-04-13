@@ -20,6 +20,7 @@ angular.module('canteenClientApp').constant('APP_CONFIG', {
  	dates_allowed: "/api/dates/allowed",
  	dates_update: "/api/dates/update",
  	dates_insert: "/api/dates/insert",
+ 	dates_holidays: "/api/dates/holidays",
  	default_meal: "/api/config/getDefaultMeal",
  	login: "/api/account/login",
  	user_properties: "/api/account/properties",

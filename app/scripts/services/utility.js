@@ -22,6 +22,7 @@
         this.getOrdersByDateRage = getOrdersByDateRage;
         this.getThisWeekEnd = getThisWeekEnd;
         this.getNextWeekStart = getNextWeekStart;
+        this.getHolidaysForThisWeek = getHolidaysForThisWeek;
 
         function getPlanByDateRage(dateFrom, dateTo) {
             return $http.get(APP_CONFIG.BASE_URL + APP_CONFIG.meals_by_date + "?dateFrom=" + dateFrom + "&dateTo=" + dateTo).
@@ -65,6 +66,13 @@
                 today.setDate(today.getDate() + (8 - day));
             }
             return today;
+        }
+
+        function getHolidaysForThisWeek() {
+            return $http.get(APP_CONFIG.BASE_URL + APP_CONFIG.dates_holidays).
+            then(function (result){
+                return result;
+            });
         }
     }
 })();

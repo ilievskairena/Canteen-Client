@@ -148,13 +148,31 @@
     function getOrderPlan() {
 
       var today = new Date();
+      var todayTemp = new Date();
+      todayTemp.setDate(today.getDate() + 1);
       //today.setDate(today.getDate() + 3);
+      var holidays = [];
       var nextWeek = utility.getNextWeekStart();
+      utility.getHolidaysForThisWeek()
+      .then(function(result){
+        holidays = result.data;
+      });
+
+      var startNextWeek = true;
+      while(todayTemp.getDay() !== 5){
+        
+        if(holidays.indexOf(todayTemp.getDate()) === -1){
+          startNextWeek = false;
+          break;
+        }
+        todayTemp.setDate(todayTemp.getDate() + 1);
+      }
+
       nextWeek.setHours(0,0,0,0);
       var dateFrom = new Date();
       var dateTo = new Date(nextWeek);
 
-      if(today.getDay() !== 5){
+      if(today.getDay() !== 5 && !startNextWeek){
         dateFrom.setDate(today.getDate() + 1);
         dateFrom.setHours(0,0,0,0);
         dateTo.setDate(nextWeek.getDate() - 3);
@@ -170,7 +188,7 @@
       utility.getOrdersByDateRage(dateFrom, dateTo).then(
         function(result) {
           vm.options = result.data;
-        //console.log(vm.options);
+        console.log(vm.options);
         for(var i = 0; i < vm.options.length; i++){
           if(vm.options[i].OrderID !== null){
             vm.ordersMade.push(vm.options[i]);

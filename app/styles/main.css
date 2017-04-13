@@ -352,7 +352,7 @@ a.list-group-item.active-success > h4 {
   }
 }
 
-.btn-text-minus {
+/*.btn-text-minus {
   position: absolute;
   left: 25px;
   top: -3px;
@@ -374,7 +374,7 @@ a.list-group-item.active-success > h4 {
   position: absolute;
   left: 24px;
   top: -1px;
-}
+}*/
 
 .meal-headings {
   padding-top: 10px;
