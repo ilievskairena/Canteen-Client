@@ -67,12 +67,13 @@
         }
 
         function checkPersonCard(card){
-
+            console.log(card);
             if(card === null){
               return;  
             } 
 
             var userCard = makeNumberString(card);
+            console.log(userCard);
             $http({
                 method: 'GET',
                 crossDomain: true,
@@ -93,16 +94,13 @@
                 }
                 else if(data.isRealized === true){
                     toastr.info("Корисникот веќе ја реализирал нарачката!");
-                    console.log("User realized the meal for today");
                     vm.cardNumber = [];
                 }
                 else if(inList === true){
                     toastr.info("Корисникот е веќе во редот!");
-                    console.log("User waiting in line");
                     vm.cardNumber = [];
                 }
                 else if(data !== null && data.isRealized !== true && inList !== true){
-                    console.log("OK");
                     vm.waitingList.push(data);
                     vm.cardNumber = [];
                     getMealsForDate();
@@ -110,8 +108,13 @@
                 
 
             }, function errorCallback(response){
-                toastr.error("Грешка во системот! Ве молиме обидете се повторно. Доколку проблемот продолжи, известете го администраторот!");
-                console.log("Error getting user");
+                if(response.status === 404){
+                    toastr.error('Картичката не е регистрирана во системот. Обратете се кај администраторот.');
+                }
+                else{
+                    toastr.error("Грешка во системот! Ве молиме обидете се повторно. Доколку проблемот продолжи, известете го администраторот!");
+                }
+                console.log(response);
                 vm.cardNumber = [];
             });
         }
@@ -199,12 +202,13 @@
                 UserID : vm.employeeToServe.UserID,
                 Name : vm.employeeToServe.Name,
                 OrderID : vm.employeeToServe.OrderID !== null? vm.employeeToServe.OrderID: -1,
-                MealID: vm.employeeToServe.OrderID !== null? vm.employeeToServe.MealID : vm.defaultMeal.ID,
+                MealID: vm.employeeToServe.OrderID !== null? vm.employeeToServe.MealID : vm.defaultMeal.MealPerDateID,
                 MealDescription : vm.employeeToServe.MealDescription,
                 Guests : vm.employeeToServe.Guests,
                 IsRealized : true,
                 Shift : vm.Shift
             };
+            console.log(realizedMeal);
             $http({
                 method: 'PUT',
                 crossDomain: true,
